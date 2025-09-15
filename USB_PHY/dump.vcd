@@ -1,0 +1,117 @@
+$date
+	Fri Jul 25 18:28:08 2025
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module USB_PHY_tb $end
+$var wire 1 ! control_reg_0 $end
+$var wire 32 " control_reg [31:0] $end
+$var reg 8 # VBUS_divider_voltage_i [7:0] $end
+$var reg 1 $ clk $end
+$var reg 1 % reset $end
+$scope module uut $end
+$var wire 8 & VBUS_divider_voltage_i [7:0] $end
+$var wire 1 $ clk $end
+$var wire 1 ' d_minus_io $end
+$var wire 1 ( d_plus_io $end
+$var wire 1 ) pullup_en_weak $end
+$var wire 1 % reset $end
+$var wire 1 ! control_reg_0 $end
+$var wire 1 * VBUS_comparator_output_o $end
+$var parameter 32 + CONTROL_REG_VBUS_COMPARATOR $end
+$var parameter 8 , VBUS_COMPARATOR_REFERENCE $end
+$var reg 32 - control_reg [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b111110 ,
+b0 +
+$end
+#0
+$dumpvars
+bx -
+x*
+1)
+x(
+z'
+bx &
+0%
+0$
+bx #
+bx "
+x!
+$end
+#1
+z(
+0*
+b0 #
+b0 &
+#5
+0!
+bx0 "
+bx0 -
+1$
+#10
+0$
+#15
+1$
+#20
+0$
+#25
+1$
+#30
+0$
+#35
+1$
+#40
+0$
+#45
+1$
+#46
+1(
+1*
+b1000011 #
+b1000011 &
+#50
+z(
+0*
+b0 #
+b0 &
+0$
+#55
+1$
+#60
+0$
+1(
+1*
+b1000011 #
+b1000011 &
+#65
+1!
+bx1 "
+bx1 -
+1$
+#70
+0$
+#75
+1$
+#80
+0$
+#85
+1$
+#90
+0$
+#95
+1$
+#100
+0$
+#105
+1$
+#110
+0$
