@@ -1,3 +1,4 @@
+//this is just a test
 module USB_PHY #(
 	parameter VBUS_COMPARATOR_REFERENCE = 8'd62,	//VBUS comparator reference voltage
 	parameter IDLE = 3'd0,
