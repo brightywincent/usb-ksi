@@ -1,18 +1,14 @@
-//this is just a test
 module USB_PHY #(
 	parameter VBUS_COMPARATOR_REFERENCE = 8'd62,	//VBUS comparator reference voltage
 	parameter IDLE = 3'd0,
 	parameter RESET = 3'd1,
 	parameter HIGH_Z = 3'd2,
 	parameter K_PULSE = 3'd3,
-	parameter JK_DETECT = 3'd4
+	parameter KJ_DETECT = 3'd4
 )(
 	input wire clk,	 
 	input wire VBUS_device,	//VBUS connection to device
 	input wire[7:0] VBUS_divider_voltage_i, //VBUS divider voltage => input to comparator
-
-	//input wire d_plus_deviceout_en,	//D+ data out from device enable
-	//input wire d_minus_deviceout_en, //D- data out from device enable
 
 	inout wire d_plus_device, //D+ interface line on device
 	inout wire d_minus_device, //D- interface line on device
@@ -107,13 +103,13 @@ module USB_PHY #(
 				
 			end
 
-			JK_DETECT : begin
+			KJ_DETECT : begin
 				if(K<=4'd3 && J <= 4'd3)begin	
-					if(d_plus_device === 1'b1 && d_minus_device === 1'b0)begin
-						J <= K+1;
+					if(d_plus_device === 1'b0 && d_minus_device === 1'b1)begin
+						K <= J+1;
 					end
-					else if(d_plus_device === 1'b0 && d_minus_device === 1'b1)begin
-						K <= J;
+					else if(d_plus_device === 1'b1 && d_minus_device === 1'b0)begin
+						J <= K;
 					end
 				end
 				else begin
@@ -136,7 +132,7 @@ module USB_PHY #(
 					chirp_on <= 1'b0;
 					d_plus_deviceout_en <= 1'b0;
 					d_minus_deviceout_en <= 1'b0;
-					state_device <= JK_DETECT;
+					state_device <= KJ_DETECT;
 				end
 			end
 
