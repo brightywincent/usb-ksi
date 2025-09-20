@@ -9,10 +9,8 @@ module HOST_PHY#(
 	parameter HIGH_Z = 3'd7
 )(
 	input wire clk,
-//----------------------------------------------	
 	inout tri d_plus,
 	inout tri d_minus,
-//----------------------------------------------	
 	output reg device_present,
 	output reg HIGH_SPEED
 );
@@ -22,13 +20,10 @@ module HOST_PHY#(
 	reg [3:0]K_count;
 	reg se0_done;
 	reg k_pulse_done;
-//----------------------------------------------	
 	reg d_plus_hostout;
 	reg d_minus_hostout;
-//----------------------------------------------	
 	reg d_plus_hostout_en;
 	reg d_minus_hostout_en;
-//----------------------------------------------	
 	initial begin //Initializations
         	state = FLOAT;
 	        device_present = 0;
@@ -43,15 +38,12 @@ module HOST_PHY#(
         	k_pulse_done = 1'b0;
         	HIGH_SPEED = 1'b0;
     	end
-//---------------------------------------------------------------------------------	
 	assign d_plus = (d_plus_hostout_en)? d_plus_hostout : 1'bz;
 	assign d_minus = (d_minus_hostout_en)? d_minus_hostout : 1'bz;
-//--------------------------------------------------------------------------------------------------------------------	
 	always @ (posedge clk) begin
 		if (detect_en) begin
 			detection_duration <= detection_duration+1;
 		end	
-//------------------------------------------------------------------------------------------
 			case (state)
 				FLOAT : begin
 					d_plus_hostout_en <= 0;
@@ -64,7 +56,6 @@ module HOST_PHY#(
 						device_present <= 1'b1;
 					end
 				end
-//------------------------------------------------------------------------------------------				
 				IDLE : begin 
 					d_plus_hostout_en <= 0;
 					d_minus_hostout_en <= 0;
@@ -78,7 +69,6 @@ module HOST_PHY#(
 							state <= HIGH_Z;
 					end
 				end
-//------------------------------------------------------------------------------------------				
 				SE0 : begin
 					d_plus_hostout <= 1'b0;
 					d_minus_hostout <= 1'b0;
@@ -89,7 +79,6 @@ module HOST_PHY#(
 						state <= RELEASE;
 					end
 				end
-//------------------------------------------------------------------------------------------	
 				HIGH_Z : begin
 					if(se0_done && !HIGH_SPEED)begin 
 						if(d_plus === 1'b0 && d_minus === 1'b1)begin
@@ -98,7 +87,6 @@ module HOST_PHY#(
 						end
 					end
 				end 
-//------------------------------------------------------------------------------------------				
 				K_CHIRP_DETECT : begin
 					if(detection_duration == 22'd20)begin
 						HIGH_SPEED <= 1'b1;
@@ -107,7 +95,6 @@ module HOST_PHY#(
 						detection_duration <= 22'd0;
 					end
 				end
-//------------------------------------------------------------------------------------------
 				RELEASE : begin
 					detection_duration <= 22'd0;
 					detect_en <= 1'b0;
@@ -115,7 +102,6 @@ module HOST_PHY#(
 					d_minus_hostout_en <= 1'b0;
 					state <= IDLE;
 				end
-//------------------------------------------------------------------------------------------
 				J_PULSE : begin
 					d_plus_hostout_en <= 1'b1;
 					d_minus_hostout_en <= 1'b1;
@@ -130,7 +116,6 @@ module HOST_PHY#(
 					end
 					
 				end
-//-----------------------------------------------------------------------------------------				
 				K_PULSE : begin
 					if(detection_duration == 22'd20)begin
 						if(K_count == 4'd7)begin
@@ -148,11 +133,9 @@ module HOST_PHY#(
 						end
 					end
 				end
-//------------------------------------------------------------------------------------------				
 				default : begin
 					state <= FLOAT;
 				end
 			endcase
 	end
-//--------------------------------------------------------------------------------------------------------------------------
 endmodule
