@@ -2,7 +2,7 @@
 `timescale 1ns / 1ns
 module USB_PHY_tb;
 reg clk;
-
+reg clk_8x
 tri d_plus_device,d_minus_device; //device data lines
 tri d_plus,d_minus; //host data lines
 
