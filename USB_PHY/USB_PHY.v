@@ -6,18 +6,39 @@ module USB_PHY #(
 	parameter K_PULSE = 3'd3,
 	parameter KJ_DETECT = 3'd4
 )(
+	input wire clk_8x,
 	input wire clk,	 
 	input wire VBUS_device,	//VBUS connection to device
 	input wire[7:0] VBUS_divider_voltage_i, //VBUS divider voltage => input to comparator
-
+	input wire reset,
 	inout wire d_plus_device, //D+ interface line on device
 	inout wire d_minus_device, //D- interface line on device
 
 	output wire control_reg_0, //control regiser[0] that stores VBUS Comparator output
 	output 	reg HIGH_SPEED,
-	output reg term_en
+	output reg term_en,
+	//output wire dp,
+	//output wire dm,
+	output wire bit
 );
+oversampler u_os(
+	.clk_8x(clk_8x),
+	.d_plus_device(d_plus_device),
+	.d_minus_device(d_minus_device),
+	.reset(reset),
+	.dp(dp_int),
+	.dm(dm_int)
+);	
 
+nrzi_decoder u_nd(
+	.clk(clk),
+	.dp(dp_int),
+	.dm(dm_int),
+	.reset(reset),
+	.bit(bit)
+);
+	wire dp_int,dm_int;
+	
 	reg sync_ff1,sync_ff2; //sync flipflops followed by VBUS comparator for stability
 	wire VBUS_comparator_output_o; // VBUS comparator output
 	reg [21:0] detection_duration_device;

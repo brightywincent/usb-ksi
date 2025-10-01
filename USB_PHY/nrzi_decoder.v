@@ -1,22 +1,29 @@
 module nrzi_decoder(
-	input clk_8x,
-	input d_plus_device,
-	input d_minus_device,
-	output reg dp,
-	output reg dm,
+	input wire clk,
+	input wire dp,
+	input wire dm,
+	input wire reset,
+	output wire bit
 );
-	reg [2:0]counter;
-	always@(posedge clk_8x) begin
+
+	reg bit_pr;
+	reg bit_pa;
+	
+	assign bit = (bit_pr==bit_pa)?1'b1:1'b0;
+	
+	initial begin
+		bit_pr = 1'b0;
+		bit_pa = 1'b0;
+	end
+	
+	always@(posedge clk or posedge reset)begin
 		if(reset) begin
-			counter<=3'd0;
+			bit_pr = 1'b0;
+			bit_pa = 1'b0;
 		end
 		else begin
-			counter<=counter+1;
-			if(counter==3'd4) begin
-				dp<=d_plus_device;
-				dm<=d_minus_device;
-				counter<=3'd0;
-			end
+			bit_pa <= bit_pr;
+			bit_pr <= (dp==1'b1 && dm==1'b0)?1'b1:(dp==1'b0 && dm==1'b1)?1'b0:bit_pr; //state to bit logic
 		end
 	end
-	endmodule
+endmodule

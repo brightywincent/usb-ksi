@@ -1,8 +1,7 @@
-//modules must start with reset. This is mandatory
 `timescale 1ns / 1ns
 module USB_PHY_tb;
 reg clk;
-reg clk_8x
+reg clk_8x;
 tri d_plus_device,d_minus_device; //device data lines
 tri d_plus,d_minus; //host data lines
 
@@ -30,8 +29,11 @@ USB_PHY uut_device(
 	//.d_minus_deviceout_en(d_minus_deviceout_en),
 	.VBUS_divider_voltage_i(VBUS_divider_voltage_i),
 	.clk(clk),
+	.clk_8x(clk_8x),
+	.reset(reset),
 	.control_reg_0(control_reg_0),
-	.VBUS_device(VBUS_device)
+	.VBUS_device(VBUS_device),
+	.bit(bit)
 );
 
 HOST_PHY uut_host(
@@ -83,9 +85,14 @@ $display("%3t |    %b   |  %b  | %b  |   %b  |  %b |   %b  |  %3b  |   %d  |%d| 
 end
 
 //clock initialization
-initial clk = 0;
+initial begin
+	clk = 0;
+	clk_8x = 0;
+end
+
 always begin
 #1 clk = ~clk;
+#0.125 clk_8x = ~clk_8x;
 end
 
 //Stimulus
