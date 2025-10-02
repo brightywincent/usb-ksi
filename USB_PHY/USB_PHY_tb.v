@@ -25,8 +25,6 @@ assign d_minus_device = (VBUS_device && d_minus_hostout_en_wire)? d_minus : 1'bz
 USB_PHY uut_device(
 	.d_plus_device(d_plus_device),
 	.d_minus_device(d_minus_device),
-	//.d_plus_deviceout_en(d_plus_deviceout_en),
-	//.d_minus_deviceout_en(d_minus_deviceout_en),
 	.VBUS_divider_voltage_i(VBUS_divider_voltage_i),
 	.clk(clk),
 	.clk_8x(clk_8x),

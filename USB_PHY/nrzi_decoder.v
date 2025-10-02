@@ -3,27 +3,32 @@ module nrzi_decoder(
 	input wire dp,
 	input wire dm,
 	input wire reset,
-	output wire bit
+	output reg bit
 );
-
-	reg bit_pr;
-	reg bit_pa;
-	
-	assign bit = (bit_pr==bit_pa)?1'b1:1'b0;
+	reg dpp,dmp;
 	
 	initial begin
-		bit_pr = 1'b0;
-		bit_pa = 1'b0;
+		dpp = 1'b0;
+		bit = 1'b0;
+		dmp = 1'b0;
 	end
 	
 	always@(posedge clk or posedge reset)begin
 		if(reset) begin
-			bit_pr = 1'b0;
-			bit_pa = 1'b0;
+			dpp <= 1'b0;
+			dmp <= 1'b0;
+			bit <= 1'b0;
 		end
 		else begin
-			bit_pa <= bit_pr;
-			bit_pr <= (dp==1'b1 && dm==1'b0)?1'b1:(dp==1'b0 && dm==1'b1)?1'b0:bit_pr; //state to bit logic
+			dpp <= dp;
+			dmp <= dm;
+			if(dp==~dpp && dm==~dmp) begin
+				bit <= 1'b0;
+			end
+			else begin
+				bit <= 1'b1;
+			end
 		end
 	end
 endmodule
+
