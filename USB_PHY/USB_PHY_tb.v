@@ -33,7 +33,8 @@ USB_PHY uut_device(
 	.reset(reset),
 	.control_reg_0(control_reg_0),
 	.VBUS_device(VBUS_device),
-	.bit(bit)
+	.b(b),
+	.b_en(b_en)
 );
 
 HOST_PHY uut_host(
