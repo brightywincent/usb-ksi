@@ -19,19 +19,18 @@ module bit_unstuffer(
 			count <= 3'd0;
 		end
 		else begin
+			b <= bit;
 			if(bit==1'b1) begin
 				count <= count+1;
 				b_en <= 1'b1;
-				b <= bit;
 			end
 			else begin
-				if(count==3'd6) begin
+				if(count>=3'd5) begin
 					b_en <= 1'b0;
 					count <= 3'd0;
 				end
 				else begin
 					count <= 3'd0;
-					b <= bit;
 					b_en <= 1'b1;
 				end
 			end

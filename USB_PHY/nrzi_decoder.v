@@ -22,7 +22,7 @@ module nrzi_decoder(
 		else begin
 			dpp <= dp;
 			dmp <= dm;
-			if(dp==~dpp && dm==~dmp) begin
+			if(dp==~dpp || dm==~dmp) begin
 				bit <= 1'b0;
 			end
 			else begin
