@@ -22,16 +22,16 @@ module bit_unstuffer(
 			b <= bit;
 			if(bit==1'b1) begin
 				count <= count+1;
-				unstuff <= 1'b1;
+				unstuff <= 1'b0;
 			end
 			else begin
 				if(count>=3'd5) begin
-					unstuff <= 1'b0;
+					unstuff <= 1'b1;
 					count <= 3'd0;
 				end
 				else begin
 					count <= 3'd0;
-					unstuff <= 1'b1;
+					unstuff <= 1'b0;
 				end
 			end
 		end

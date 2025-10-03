@@ -20,7 +20,7 @@ module USB_PHY #(
 	output wire b,
 	output wire unstuff
 );
-oversampler u_os(
+oversampler os(
 	.clk_8x(clk_8x),
 	.d_plus_device(d_plus_device),
 	.d_minus_device(d_minus_device),
@@ -29,7 +29,7 @@ oversampler u_os(
 	.dm(dm)
 );	
 
-nrzi_decoder u_nd(
+nrzi_decoder nd(
 	.clk(clk),
 	.dp(dp),
 	.dm(dm),
@@ -37,18 +37,27 @@ nrzi_decoder u_nd(
 	.bit(bit)
 );
 
-bit_unstuffer u_bu(
+bit_unstuffer bu(
 	.clk(clk),
 	.reset(reset),
 	.bit(bit),
 	.b(b),
 	.unstuff(unstuff)
 );	
-sync_detector u_sd(
+sync_detector sd(
 	.b(b),
 	.clk(clk),
 	.reset(reset),
 	.sync(sync)
+);
+deserializer d(
+	.clk(clk),
+	.reset(reset),
+	.b(b),
+	.unstuff(unstuff),
+	.sync(sync),
+	.data_32(data_32),
+	.bytes(bytes)
 );
 	reg sync_ff1,sync_ff2; //sync flipflops followed by VBUS comparator for stability
 	wire VBUS_comparator_output_o; // VBUS comparator output
