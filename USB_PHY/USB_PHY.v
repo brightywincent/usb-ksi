@@ -17,38 +17,39 @@ module USB_PHY #(
 	output wire control_reg_0, //control regiser[0] that stores VBUS Comparator output
 	output 	reg HIGH_SPEED,
 	output reg term_en,
-	//output wire dp,
-	//output wire dm,
 	output wire b,
-	output wire b_en
+	output wire unstuff
 );
 oversampler u_os(
 	.clk_8x(clk_8x),
 	.d_plus_device(d_plus_device),
 	.d_minus_device(d_minus_device),
 	.reset(reset),
-	.dp(dp_int),
-	.dm(dm_int)
+	.dp(dp),
+	.dm(dm)
 );	
 
 nrzi_decoder u_nd(
 	.clk(clk),
-	.dp(dp_int),
-	.dm(dm_int),
+	.dp(dp),
+	.dm(dm),
 	.reset(reset),
-	.bit(bit_int)
+	.bit(bit)
 );
 
 bit_unstuffer u_bu(
 	.clk(clk),
 	.reset(reset),
-	.bit(bit_int),
+	.bit(bit),
 	.b(b),
-	.b_en(b_en)
-	
+	.unstuff(unstuff)
+);	
+sync_detector u_sd(
+	.b(b),
+	.clk(clk),
+	.reset(reset),
+	.sync(sync)
 );
-	wire bit_int;
-	wire dp_int,dm_int;
 	reg sync_ff1,sync_ff2; //sync flipflops followed by VBUS comparator for stability
 	wire VBUS_comparator_output_o; // VBUS comparator output
 	reg [21:0] detection_duration_device;

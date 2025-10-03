@@ -6,7 +6,9 @@ reg reset;
 wire bit,dp,dm;
 wire dp_prev=test.u_nd.dpp;
 wire dm_prev=test.u_nd.dmp;
-wire b,b_en;
+wire b,unstuff;
+wire sync;
+wire [5:0] sync_count = test.u_sd.count;
 oversampler u_os(
 	.clk_8x(clk_8x),
 	.d_plus_device(dpl),
@@ -28,7 +30,13 @@ bit_unstuffer u_bu(
 	.reset(reset),
 	.bit(bit),
 	.b(b),
-	.b_en(b_en)
+	.unstuff(unstuff)
+);
+sync_detector u_sd(
+	.b(b),
+	.clk(clk),
+	.reset(reset),
+	.sync(sync)
 );
 initial begin
 	$dumpfile("test.vcd");
@@ -68,8 +76,12 @@ end
 		#2000 {dpl,dmi} = 2'b10;
 		#2000 {dpl,dmi} = 2'b10;
 		#2000 {dpl,dmi} = 2'b10;
-		#10000; 
-		 $finish;
+		for(integer i = 0;i<31;i++) begin
+			#2000 {dpl,dmi} = {~dpl,~dmi};
+		end
+		#2000  {dpl,dmi} = 2'b01;
+		#2000  {dpl,dmi} = 2'b01;
+		 #8000 $finish;
 	end
 endmodule
 
