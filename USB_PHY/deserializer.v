@@ -4,7 +4,7 @@ module deserializer(
 	input wire b,
 	input wire unstuff,
 	input wire sync,
-	output reg [31:0]data_32,
+	output reg [32:0]data_32,
 	output reg [3:0]byte_ready
 );
 	reg [3:0]count;
@@ -14,14 +14,14 @@ module deserializer(
 		count <= 4'b0;
 		byte <= 2'b00;
 		byte_ready <= 4'b0000;
-		data_32 <= 32'd0;
+		data_32 <= 33'd0;
 	end
 	always@(posedge clk or posedge reset) begin
 		if(reset) begin
 			count <= 4'd0;
 			byte <= 2'b00;
 			byte_ready <= 4'b0000;
-			data_32 <= 32'd0;
+			data_32 <= 33'd0;
 		end
 		else begin
 			if(!unstuff) begin
@@ -41,6 +41,7 @@ module deserializer(
 					byte_ready <= 4'b0000;
 				end
 			end
+			data_32[31:0] <= (sync)?32'd0:data_32[31:0];
 		end
 	end
 endmodule
