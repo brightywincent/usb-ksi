@@ -18,7 +18,12 @@ module USB_PHY #(
 	output 	reg HIGH_SPEED,
 	output reg term_en,
 	output wire b,
-	output wire unstuff
+	output wire unstuff,
+	output wire [31:0]data_32,
+	output wire byte1_ready;
+	output wire byte2_ready;
+	output wire byte3_ready;
+	output wire byte4_ready;
 );
 oversampler os(
 	.clk_8x(clk_8x),
@@ -50,14 +55,14 @@ sync_detector sd(
 	.reset(reset),
 	.sync(sync)
 );
-deserializer d(
+deserializer u_d(
 	.clk(clk),
 	.reset(reset),
 	.b(b),
 	.unstuff(unstuff),
 	.sync(sync),
 	.data_32(data_32),
-	.bytes(bytes)
+	.byte_ready(byte_ready)
 );
 	reg sync_ff1,sync_ff2; //sync flipflops followed by VBUS comparator for stability
 	wire VBUS_comparator_output_o; // VBUS comparator output

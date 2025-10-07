@@ -9,8 +9,8 @@ wire dm_prev=test.u_nd.dmp;
 wire b,unstuff;
 wire sync;
 wire [5:0] sync_count = test.u_sd.count;
-wire [32:0]data_32;
-wire bytes;
+wire [31:0]data_32;
+wire [3:0]byte_ready;
 oversampler u_os(
 	.clk_8x(clk_8x),
 	.d_plus_device(dpl),
@@ -47,7 +47,7 @@ deserializer u_d(
 	.unstuff(unstuff),
 	.sync(sync),
 	.data_32(data_32),
-	.bytes(bytes)
+	.byte_ready(byte_ready)
 );
 initial begin
 	$dumpfile("test.vcd");
