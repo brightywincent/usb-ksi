@@ -9,7 +9,7 @@ wire dm_prev=test.u_nd.dmp;
 wire b,unstuff;
 wire sync;
 wire [5:0] sync_count = test.u_sd.count;
-wire [31:0]data_32;
+wire [32:0]data_32;
 wire [3:0]byte_ready;
 oversampler u_os(
 	.clk_8x(clk_8x),

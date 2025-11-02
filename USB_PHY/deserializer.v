@@ -4,7 +4,7 @@ module deserializer(
 	input wire b,
 	input wire unstuff,
 	input wire sync,
-	output reg [32:0]data_32,
+	output reg [32:0]data_32, //this is actually a 33-bit register but ignore the 33rd bit. It's just a reserve for 1st bit right after sync signal.
 	output reg [3:0]byte_ready
 );
 	reg [3:0]count;
