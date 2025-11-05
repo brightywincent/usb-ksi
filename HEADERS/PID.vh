@@ -1,5 +1,11 @@
-`ifndef PID
-`define PID
+`ifndef PID_VH
+`define PID_VH
+
+//PID TYPEs
+`define PID_SPECIAL 2'b00
+`define PID_TOKEN 2'b01
+`define PID_HANDSHAKE 2'b10
+`define PID_DATA 2'b11
 
 //TOKEN PIDs
 `define PID_OUT 8'b1110_0001
