@@ -1,20 +1,20 @@
 module oversampler(
-	input clk_8x_i,
-	input dp_i,
-	input dm_i,
-	input reset,
-	output reg dp_o,
-	output reg dm_o
+	input os_clk_8x_i,
+	input os_dp_i,
+	input os_dm_i,
+	input os_reset,
+	output reg os_dp_o,
+	output reg os_dm_o
 );
 	
-	always@(posedge clk_8x_i or posedge reset) begin
-		if(reset) begin
-			dp_o <= 1'b0;
-			dm_o <= 1'b0;
+	always@(posedge os_clk_8x_i or posedge os_reset) begin
+		if(os_reset) begin
+			os_dp_o <= 1'b0;
+			os_dm_o <= 1'b0;
 		end
 		else begin
-			dp_o<=dp_i;
-			dm_o<=dm_i;
+			os_dp_o<=os_dp_i;
+			os_dm_o<=os_dm_i;
 		end
 	end
 	
