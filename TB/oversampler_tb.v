@@ -1,37 +1,37 @@
 `timescale 1ps / 1ps;
 module oversampler_tb;
-reg clk,clk_8x_i;
-reg dp_i,dm_i;
-reg reset;
-wire dp_o,dm_o;
+reg clk,os_clk_8x_i;
+reg os_dp_i,os_dm_i;
+reg os_reset;
+wire os_dp_o,os_dm_o;
 
 oversampler u_os(
-	.clk_8x_i(clk_8x_i),
-	.dp_i(dp_i),
-	.dm_i(dm_i),
-	.reset(reset),
-	.dp_o(dp_o),
-	.dm_o(dm_o)
+	.os_clk_8x_i(os_clk_8x_i),
+	.os_dp_i(os_dp_i),
+	.os_dm_i(os_dm_i),
+	.os_reset(os_reset),
+	.os_dp_o(os_dp_o),
+	.os_dm_o(os_dm_o)
 );
 
 initial begin
 	$dumpfile("TB/oversampler.vcd");
 	$dumpvars(0,oversampler_tb);
-	$display("time | clk | clk_8x_i | dp_i | dm_i | dp_o | dm_o | reset |");
+	$display("time | clk | os_clk_8x_i | os_dp_i | os_dm_i | os_dp_o | os_dm_o | os_reset |");
 end
 
-always@(posedge clk_8x_i) begin
-	$display(" %3t | %3t |  %3t   |  %b  |  %b  |  %b  |  %b  |   %b  |",$time/125,clk,clk_8x_i,dp_i,dm_i,dp_o,dm_o,reset);
+always@(posedge os_clk_8x_i) begin
+	$display(" %3t | %3t |  %3t   |  %b  |  %b  |  %b  |  %b  |   %b  |",$time/125,clk,os_clk_8x_i,os_dp_i,os_dm_i,os_dp_o,os_dm_o,os_reset);
 end
 
 initial begin
 	clk = 0;
-	clk_8x_i = 0;
-	reset = 0;
+	os_clk_8x_i = 0;
+	os_reset = 0;
 end
 
 always begin
-	# 125 clk_8x_i = ~clk_8x_i;
+	# 125 os_clk_8x_i = ~os_clk_8x_i;
 end
 
 always begin
@@ -39,24 +39,24 @@ always begin
 end
 
 	initial begin
-		#0    {dp_i,dm_i} = 2'b00;
-		#200 {dp_i,dm_i} = 2'b10;
-		#200 {dp_i,dm_i} = 2'b10;
-		#200 {dp_i,dm_i} = 2'b10;
-		#200 {dp_i,dm_i} = 2'b10;
-		#200 {dp_i,dm_i} = 2'b10;
-		#200 {dp_i,dm_i} = 2'b10;
-		#200 {dp_i,dm_i} = 2'b10;
-		#200 {dp_i,dm_i} = 2'b01;
-		#200 {dp_i,dm_i} = 2'b01;
-		#200 {dp_i,dm_i} = 2'b10;
-		#200 {dp_i,dm_i} = 2'b10;
-		#200 {dp_i,dm_i} = 2'b10;
+		#0    {os_dp_i,os_dm_i} = 2'b00;
+		#200 {os_dp_i,os_dm_i} = 2'b10;
+		#200 {os_dp_i,os_dm_i} = 2'b10;
+		#200 {os_dp_i,os_dm_i} = 2'b10;
+		#200 {os_dp_i,os_dm_i} = 2'b10;
+		#200 {os_dp_i,os_dm_i} = 2'b10;
+		#200 {os_dp_i,os_dm_i} = 2'b10;
+		#200 {os_dp_i,os_dm_i} = 2'b10;
+		#200 {os_dp_i,os_dm_i} = 2'b01;
+		#200 {os_dp_i,os_dm_i} = 2'b01;
+		#200 {os_dp_i,os_dm_i} = 2'b10;
+		#200 {os_dp_i,os_dm_i} = 2'b10;
+		#200 {os_dp_i,os_dm_i} = 2'b10;
 		for(integer i = 0;i<31;i++) begin
-			#200 {dp_i,dm_i} = {~dp_i,~dm_i};
+			#200 {os_dp_i,os_dm_i} = {~os_dp_i,~os_dm_i};
 		end
-		#200  {dp_i,dm_i} = 2'b01;
-		#200  {dp_i,dm_i} = 2'b01;
+		#200  {os_dp_i,os_dm_i} = 2'b01;
+		#200  {os_dp_i,os_dm_i} = 2'b01;
 		 #200 $finish;
 	end
 endmodule
