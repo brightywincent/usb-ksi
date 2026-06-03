@@ -24,7 +24,6 @@ module sync_detector_tb;
          case (sd_1.STATE)
             2'b00: s = "IDLE";
             2'b01: s = "ACQUIRING";
-            2'b10: s = "SYNC_OK"; 
             default: s = "IDLE";
         endcase
     end
@@ -51,6 +50,7 @@ module sync_detector_tb;
         end
         #2 sd_sbus_i=2'b10;
         #2 sd_sbus_i=2'b10;
+        #2 sd_sbus_i=2'b01;
         #13 $finish;
     end
 

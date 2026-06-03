@@ -7,7 +7,6 @@ module sync_detector(
 	
 	localparam IDLE=2'b00;
 	localparam ACQUIRING=2'b01;
-	localparam SYNC_FOUND=2'b10;
 
 	reg [1:0]STATE;
 	reg [3:0]sd_count;
@@ -26,28 +25,35 @@ module sync_detector(
 				IDLE : begin
 					sd_sync_o<=1'b0;
 					sd_count<={4{1'b0}};
-					if(sd_sbus_i==2'b10)begin
+					if((sd_sbus_i==2'b10) && (sd_prev==2'b01))begin
 						STATE<=ACQUIRING;
+						sd_count<=sd_count+1;
 					end
 				end
 				ACQUIRING : begin
-					if(sd_count<14)begin
+					if(sd_count<4'd14)begin
 						if((sd_prev==2'b01 && sd_sbus_i==2'b10) || (sd_prev==2'b10 && sd_sbus_i==2'b01))begin
 							sd_count<=sd_count+1;
 						end
 						else begin
 							STATE<=IDLE;
+							sd_count<={4{1'b0}};
 						end
 					end
-					else
-						STATE<=SYNC_FOUND;
+					else if(({sd_sbus_i,sd_prev}==4'b1010)) begin
+						sd_count<=4'b0;
+						sd_sync_o<=1'b1;
+						STATE<=IDLE;
+					end
 				end
-				SYNC_FOUND : begin
-					sd_sync_o<=1'b1;
-					STATE<=IDLE;
+				default :begin
+				    STATE<=IDLE;
+				    sd_sync_o<=1'b0;
+					sd_count<={4{1'b0}};
 				end
-				default : STATE<=IDLE;
 			endcase
 		end
 	end
 endmodule
+
+
