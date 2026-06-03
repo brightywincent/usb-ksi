@@ -27,7 +27,6 @@ module sync_detector(
 					sd_count<={4{1'b0}};
 					if((sd_sbus_i==2'b10) && (sd_prev==2'b01))begin
 						STATE<=ACQUIRING;
-						sd_count<=sd_count+1;
 					end
 				end
 				ACQUIRING : begin
@@ -40,9 +39,11 @@ module sync_detector(
 							sd_count<={4{1'b0}};
 						end
 					end
-					else if(({sd_sbus_i,sd_prev}==4'b1010)) begin
+					else begin
+						if(({sd_sbus_i,sd_prev}==4'b1010)) begin
+							sd_sync_o<=1'b1;
+						end
 						sd_count<=4'b0;
-						sd_sync_o<=1'b1;
 						STATE<=IDLE;
 					end
 				end
