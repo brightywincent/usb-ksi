@@ -1,0 +1,160 @@
+$date
+	Thu Jun  4 07:35:56 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module nrzi_decoder_tb $end
+$var wire 1 ! nd_sbit_o $end
+$var wire 1 " nd_invalid_o $end
+$var reg 1 # nd_clk_i $end
+$var reg 1 $ nd_dminus_i $end
+$var reg 1 % nd_dplus_i $end
+$var reg 1 & nd_reset $end
+$scope module nd_1 $end
+$var wire 1 # nd_clk_i $end
+$var wire 1 $ nd_dminus_i $end
+$var wire 1 % nd_dplus_i $end
+$var wire 1 & nd_reset $end
+$var reg 1 " nd_invalid_o $end
+$var reg 2 ' nd_prev [1:0] $end
+$var reg 1 ! nd_sbit_o $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b0 '
+1&
+0%
+0$
+1#
+1"
+0!
+$end
+#1
+0#
+#2
+1#
+0&
+#3
+0#
+#4
+1#
+#5
+0#
+#6
+1#
+#7
+0#
+#8
+1#
+#9
+0#
+#10
+1#
+#11
+0#
+#12
+b1 '
+1#
+1$
+#13
+0#
+#14
+0"
+b10 '
+1#
+1%
+0$
+#15
+0#
+#16
+b1 '
+1#
+0%
+1$
+#17
+0#
+#18
+b10 '
+1#
+1%
+0$
+#19
+0#
+#20
+b1 '
+1#
+0%
+1$
+#21
+0#
+#22
+b10 '
+1#
+1%
+0$
+#23
+0#
+#24
+1!
+1#
+#25
+0#
+#26
+1#
+#27
+0#
+#28
+1#
+#29
+0#
+#30
+1#
+#31
+0#
+#32
+1"
+b0 '
+1#
+0%
+#33
+0#
+#34
+b10 '
+1#
+1%
+#35
+0#
+#36
+0!
+0"
+b1 '
+1#
+0%
+1$
+#37
+0#
+#38
+b10 '
+1#
+1%
+0$
+#39
+0#
+#40
+1!
+1#
+#41
+0#
+#42
+1#
+#43
+0#
