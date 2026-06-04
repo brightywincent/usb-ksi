@@ -1,0 +1,178 @@
+$date
+	Thu Jun  4 11:35:55 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module bit_unstuffer_tb $end
+$var wire 1 ! bu_unstuff_o $end
+$var wire 1 " bu_error_o $end
+$var reg 1 # bu_clk_i $end
+$var reg 1 $ bu_reset $end
+$var reg 1 % bu_sbit_i $end
+$var reg 1 & bu_valid_bit_i $end
+$scope module bu_1 $end
+$var wire 1 # bu_clk_i $end
+$var wire 1 $ bu_reset $end
+$var wire 1 % bu_sbit_i $end
+$var wire 1 & bu_valid_bit_i $end
+$var reg 3 ' bu_count [2:0] $end
+$var reg 1 " bu_error_o $end
+$var reg 1 ! bu_unstuff_o $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b0 '
+0&
+0%
+1$
+1#
+0"
+0!
+$end
+#1
+0#
+#2
+b1 '
+1#
+1%
+0$
+#3
+0#
+#4
+b10 '
+1#
+#5
+0#
+#6
+b11 '
+1#
+#7
+0#
+#8
+b100 '
+1#
+#9
+0#
+#10
+b101 '
+1#
+#11
+0#
+#12
+b110 '
+1#
+#13
+0#
+#14
+b0 '
+1"
+1#
+1%
+#15
+0#
+#16
+b1 '
+0"
+1#
+#17
+0#
+#18
+b10 '
+1#
+#19
+0#
+#20
+b11 '
+1#
+#21
+0#
+#22
+b100 '
+1#
+#23
+0#
+#24
+b101 '
+1#
+#25
+0#
+#26
+b0 '
+1#
+0%
+#27
+0#
+#28
+1#
+#29
+0#
+#30
+1#
+1&
+#31
+0#
+#32
+b1 '
+1#
+1%
+0&
+#33
+0#
+#34
+b10 '
+1#
+#35
+0#
+#36
+b11 '
+1#
+#37
+0#
+#38
+b100 '
+1#
+#39
+0#
+#40
+b101 '
+1#
+#41
+0#
+#42
+b110 '
+1#
+#43
+0#
+#44
+b0 '
+1!
+1#
+0%
+#45
+0#
+#46
+0!
+1#
+#47
+0#
+#48
+1#
+#49
+0#
+#50
+1#
+#51
+0#
+#52
+1#
+#53
+0#
