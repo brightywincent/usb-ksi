@@ -1,39 +1,43 @@
 module bit_unstuffer(
-	input wire clk,
-	input reset,
-	input wire bit,
-	output reg b,
-	output reg unstuff
+	input wire bu_clk_i,
+	input wire bu_reset,
+	input wire bu_sbit_i,
+	input wire bu_valid_bit_i, //input taken from the output of nrzi decoder -> nd_invalid_o
+	output reg bu_unstuff_o,
+	output reg bu_error_o
 );
-	reg [2:0]count;
 	
-	initial begin
-		count = 3'd0;
-		b = 1'b0;
-		unstuff = 1'b0;
-	end
+	reg [2:0]bu_count;
 	
-	always@(posedge clk or posedge reset) begin
-		if(reset) begin
-			unstuff <= 1'b0;
-			count <= 3'd0;
+	always@(posedge bu_clk_i or posedge bu_reset) begin
+		if(bu_reset) begin
+			bu_unstuff_o <= 1'b0;
+			bu_count <= 3'd0;
+			bu_error_o<=1'b0;
 		end
 		else begin
-			b <= bit;
-			if(bit==1'b1) begin
-				count <= count+1;
-				unstuff <= 1'b0;
-			end
-			else begin
-				if(count>=3'd5) begin
-					unstuff <= 1'b1;
-					count <= 3'd0;
+			bu_unstuff_o<= 1'b0;
+			bu_error_o<=1'b0;
+			if(bu_valid_bit_i==1'b0) begin //input is negative logic so, valid is set to 0
+				if(bu_sbit_i==1'b1) begin 
+					if(bu_count<3'd6)begin
+						bu_count <= bu_count+1;
+					end
+					else begin
+						bu_error_o<=1'b1;
+						bu_count<= 3'd0;
+					end
 				end
 				else begin
-					count <= 3'd0;
-					unstuff <= 1'b0;
+					if(bu_count==3'd6)begin
+						bu_unstuff_o<=1'b1;
+					end
+					bu_count<=3'b0;
 				end
 			end
+			else begin
+				bu_count<=3'b0;
+			end	
 		end
 	end
 
