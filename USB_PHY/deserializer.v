@@ -1,47 +1,48 @@
 module deserializer(
-	input wire clk,
-	input wire reset,
-	input wire b,
-	input wire unstuff,
-	input wire sync,
-	output reg [32:0]data_32, //this is actually a 33-bit register but ignore the 33rd bit. It's just a reserve for 1st bit right after sync signal.
-	output reg [3:0]byte_ready
+	input wire d_clk_i,
+	input wire d_reset,
+	input wire d_sbit_i,
+	input wire d_unstuff_i,
+	input wire d_sync_i,
+	output reg [31:0]d_bytes_o, //this is actually a 33-bit register but ignore the 33rd bit. It's just a reserve for 1st bit right after d_sync_i signal.
+	output reg [3:0]d_byte_ready_o
 );
-	reg [3:0]count;
-	reg [1:0]byte;
+	reg [3:0]d_count;
+	reg [1:0]BYTE;
+	reg d_start;
 	
-	initial begin
-		count <= 4'b0;
-		byte <= 2'b00;
-		byte_ready <= 4'b0000;
-		data_32 <= 33'd0;
-	end
-	always@(posedge clk or posedge reset) begin
-		if(reset) begin
-			count <= 4'd0;
-			byte <= 2'b00;
-			byte_ready <= 4'b0000;
-			data_32 <= 33'd0;
+	always@(posedge d_clk_i or posedge d_reset) begin
+		if(d_reset) begin
+			d_count <= 4'd0;
+			BYTE <= 2'b00;
+			d_byte_ready_o <= 4'b0000;
+			d_bytes_o <= 32'd0;
+			d_start<=1'b0;
 		end
-		else begin
-			if(!unstuff) begin
-				case(byte) 
-				2'b00 : data_32[7:0] <= {b,data_32[7:1]};
-				2'b01 : data_32[15:8] <= {b,data_32[15:9]};
-				2'b10 : data_32[23:16] <= {b,data_32[23:17]};
-				2'b11 : data_32[31:24] <= {b,data_32[31:25]};
+		else if(d_sync_i | d_start) begin
+			d_start<=1'b1;
+			d_byte_ready_o <= 4'b0;
+			if((!d_unstuff_i)&(d_start | d_sync_i)) begin
+				case(BYTE) 
+					2'b00 : d_bytes_o[7:0] <= {d_sbit_i,d_bytes_o[7:1]};
+					2'b01 : d_bytes_o[15:8] <= {d_sbit_i,d_bytes_o[15:9]};
+					2'b10 : d_bytes_o[23:16] <= {d_sbit_i,d_bytes_o[23:17]};
+					2'b11 : d_bytes_o[31:24] <= {d_sbit_i,d_bytes_o[31:25]};	
+					default : BYTE<=2'b00;
 				endcase
-				if(count==4'd7) begin
-					byte_ready[byte] <= 1'b1;
-					byte <= byte+1;
-					count <= 4'd0;
+				if(d_count==4'd7) begin
+					d_byte_ready_o[BYTE] <= 1'b1;
+					d_count <= 4'd0;
+					if(BYTE==2'b11)begin
+						d_start<=1'b0;
+						BYTE<=2'b0;
+					end
+					else BYTE <= BYTE+1;
 				end
 				else begin
-					count <= count+1;
-					byte_ready <= 4'b0000;
+					d_count <= d_count+1;
 				end
 			end
-			data_32[31:0] <= (sync)?32'd0:data_32[31:0];
-		end
+		end 
 	end
 endmodule
