@@ -1,31 +1,27 @@
-module pid_checker(
-	input wire clk,
-	input wire reset,
-	input wire sync,
-	input wire pid_byte,
-	input wire [7:0]pid_in,
-	output reg pid_valid
+module pid_decoder(
+	input wire pd_clk_i,
+	input wire pd_reset, 
+	input wire [7:0]pd_pbyte0_i,
+	input wire pd_pbyte0_ready_i, 
+	output reg pd_valid_o,
+	output reg pd_error_o
 );
-	reg pid_start;
-	initial begin
-		pid_start = 1'b0;
-		pid_valid = 1'b0;
-	end
-	always@(posedge clk or posedge reset) begin
-		if(reset) begin
-			pid_valid <= 1'b0;
-			pid_start <= 1'b0;
+	
+	always@(posedge pd_clk_i or posedge pd_reset) begin
+		if(pd_reset) begin
+			pd_valid_o <= 1'b0;
+			pd_error_o<=1'b0;
 		end
 		else begin
-			if(sync) begin
-				pid_start <= (sync)?1'b1:1'b0;
-			end
-			else if(pid_start && pid_byte) begin
-				pid_valid <= (pid_in[7:4]==~pid_in[3:0])?1'b1:1'b0;
-				pid_start <= 1'b0;
-			end
-			else begin
-				pid_valid <= 1'b0;
+			pd_valid_o<=1'b0;
+			pd_error_o<=1'b0;
+			if(pd_pbyte0_ready_i)begin
+				if(pd_pbyte0_i[7:4]==~pd_pbyte0_i[3:0])begin
+					pd_valid_o<=1'b1;
+				end
+				else begin
+					pd_error_o<=1'b1;
+				end
 			end
 		end
 	end
