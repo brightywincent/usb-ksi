@@ -7,7 +7,7 @@ module packet_dispatcher(
     output reg pdis_token_o,
     output reg pdis_data_o,
     output reg pdis_handshake_o,
-    output reg pdis_special_o,
+    output reg pdis_special_o
 );
     always@(posedge pdis_clk_i or posedge pdis_reset)begin
         if(pdis_reset)begin
