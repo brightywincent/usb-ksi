@@ -24,17 +24,17 @@ module packet_dispatcher(
             if(pdis_valid_i) begin
                 case(pdis_pid_i) 
                 
-                `PID_OUT,`PID_SOF,
-                `PID_IN,`PID_SETUP : pdis_token_o<=1'b1;
+                `PIDN_OUT,`PIDN_SOF,
+                `PIDN_IN,`PIDN_SETUP : pdis_token_o<=1'b1;
 
-                `PID_DATA0,`PID_DATA2,
-                `PID_DATA1,`PID_MDATA : pdis_data_o<=1'b1;
+                `PIDN_DATA0,`PIDN_DATA2,
+                `PIDN_DATA1,`PIDN_MDATA : pdis_data_o<=1'b1;
 
-                `PID_ACK,`PID_NYET,
-                `PID_NAK,`PID_STALL : pdis_handshake_o<=1'b1;
+                `PIDN_ACK,`PIDN_NYET,
+                `PIDN_NAK,`PIDN_STALL : pdis_handshake_o<=1'b1;
 
-                `PID_PING,`PID_SPLIT,
-                `PID_PRE : pdis_special_o<=1'b1;
+                `PIDN_PING,`PIDN_SPLIT,
+                `PIDN_PRE : pdis_special_o<=1'b1;
 
                 endcase
             end
