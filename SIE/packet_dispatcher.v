@@ -7,7 +7,8 @@ module packet_dispatcher(
     output reg pdis_token_o,
     output reg pdis_data_o,
     output reg pdis_handshake_o,
-    output reg pdis_special_o
+    output reg pdis_special_o,
+    output reg [1:0]pdis_subtype_o
 );
     always@(posedge pdis_clk_i or posedge pdis_reset)begin
         if(pdis_reset)begin
@@ -22,6 +23,7 @@ module packet_dispatcher(
             pdis_handshake_o<=1'b0;
             pdis_special_o<=1'b0;
             if(pdis_valid_i) begin
+                pdis_subtype_o<=pdis_pid_i[3:2];
                 case(pdis_pid_i) 
                 
                 `PIDN_OUT,`PIDN_SOF,
