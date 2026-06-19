@@ -9,6 +9,7 @@ module packet_dispatcher_tb;
     wire pdis_data_o;
     wire pdis_handshake_o;
     wire pdis_special_o;
+    wire pdis_subtype_o;
 
     packet_dispatcher pdis_1(
         .pdis_clk_i(pdis_clk_i),
@@ -18,7 +19,8 @@ module packet_dispatcher_tb;
         .pdis_token_o(pdis_token_o),
         .pdis_data_o(pdis_data_o),
         .pdis_handshake_o(pdis_handshake_o),
-        .pdis_special_o(pdis_special_o)
+        .pdis_special_o(pdis_special_o),
+        .pdis_subtype_o(pdis_subtype_o)
     );
 
     initial begin
