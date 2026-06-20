@@ -1,4 +1,4 @@
-module crc_checker(
+module crc5_checker(
     input wire cc_clk_i,
     input wire cc_reset,
     input wire cc_sbit_i,
