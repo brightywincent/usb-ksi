@@ -5,6 +5,7 @@ module eop_detector_tb;
     reg ed_reset;
     reg ed_dplus_i;
     reg ed_dminus_i;
+    reg ed_eop_start_o;
     wire ed_eop_o;
 
     eop_detector ed_1(
@@ -12,6 +13,7 @@ module eop_detector_tb;
         .ed_reset(ed_reset),
         .ed_dplus_i(ed_dplus_i),
         .ed_dminus_i(ed_dminus_i),
+        .ed_eop_start_o(ed_eop_start_o),
         .ed_eop_o(ed_eop_o)
     );
 
