@@ -5,6 +5,7 @@ module crc16_checker_tb;
     reg cc16_reset;
     reg cc16_sbit_i;
     reg cc16_sync_i;
+    reg cc16_freeze_i;
     wire [15:0]cc16_reg;
 
     crc16_checker cc16_1(
@@ -12,6 +13,7 @@ module crc16_checker_tb;
         .cc16_reset(cc16_reset),
         .cc16_sbit_i(cc16_sbit_i),
         .cc16_sync_i(cc16_sync_i),
+        .cc16_freeze_i(cc16_freeze_i),
         .cc16_reg(cc16_reg)
     );
 
@@ -30,6 +32,7 @@ module crc16_checker_tb;
         cc16_reset=1'b1;
         cc16_sbit_i=1'b0;
         cc16_sync_i=1'b0;
+        cc16_freeze_i=1'b0;
     end
 
     always begin
