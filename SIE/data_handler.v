@@ -10,7 +10,7 @@ module data_handler(
     output reg dh_write_o,
     output reg dh_crc16_reset_o,
     output reg dh_data_valid_o,
-    output reg dh_crc_fail_o,
+    output reg dh_crc16_fail_o,
     output reg dh_packet_error_o,
     output reg [7:0]dh_byte_o
 );
@@ -24,7 +24,7 @@ module data_handler(
         if(dh_reset)begin
             dh_crc16_reset_o<=1'b0;
             dh_data_valid_o<=1'b0;
-            dh_crc_fail_o<=1'b0;
+            dh_crc16_fail_o<=1'b0;
             dh_packet_error_o<=1'b0;
             dh_write_o<=1'b0;
             dh_byte_o<=8'b0;
@@ -33,7 +33,7 @@ module data_handler(
         end
         else begin
             dh_data_valid_o<=1'b0;
-            dh_crc_fail_o<=1'b0;
+            dh_crc16_fail_o<=1'b0;
             dh_crc16_reset_o<=1'b0;
             dh_packet_error_o<=1'b0;
             dh_write_o<=1'b0;
@@ -85,7 +85,7 @@ module data_handler(
                     if(dh_crc16_i==16'b0)
                         dh_data_valid_o<=1'b1;
                     else
-                        dh_crc_fail_o<=1'b1;
+                        dh_crc16_fail_o<=1'b1;
                 end
             end
         end
