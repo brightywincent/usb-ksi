@@ -33,24 +33,26 @@ module rx_fifo(
                     rf_byte_o<=8'bx;
                 end
                 2'b10 : begin
-                    if(byte_count!=7'd64)begin
+                    if(byte_count==7'd64)begin
+                        rf_overflow_o<=1'b1;
+                        rf_byte_o<=8'bx;
+                    end
+                    else begin
                         fifo_mem[wr_ptr]<=rf_byte_i;
                         wr_ptr<=wr_ptr+1;
                         byte_count<=byte_count+1;
                     end
-                    else 
-                        rf_overflow_o<=1'b1;
-                        rf_byte_o<=8'bx;
                 end
                 2'b01 : begin
-                    if(byte_count!=7'd0)begin
+                    if(byte_count==7'd0)begin
+                        rf_underflow_o<=1'b1;
+                        rf_byte_o<=8'bx;
+                    end
+                    else begin
                         rf_byte_o<=fifo_mem[rd_ptr];
                         rd_ptr<=rd_ptr+1;
                         byte_count<=byte_count-1;
-                    end
-                    else
-                        rf_underflow_o<=1'b1;
-                        rf_byte_o<=8'bx;
+                    end                       
                 end
                 2'b11 : begin
                     rf_byte_o<=rf_byte_i;
