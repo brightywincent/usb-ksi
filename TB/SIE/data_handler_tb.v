@@ -1,3 +1,4 @@
+`timescale 1 ns/ 1 ns;
 module data_handler_tb;
     reg dh_clk_i;
     reg dh_reset;
