@@ -1,3 +1,4 @@
+`timescale 1 ns / 1 ns;
 module rx_fifo_tb;
     reg rf_clk_i;
     reg rf_reset;
