@@ -1,3 +1,4 @@
+`include "PID.vh" 
 module handshake_decoder(
     input wire hd_clk_i,
     input wire hd_reset,
