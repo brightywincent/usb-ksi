@@ -1,14 +1,14 @@
 `include "PID.vh"
 module transaction_engine#(
-    parameter RESPONSE_TIMEOUT=10'd816;
+    parameter RESPONSE_TIMEOUT=10'd816
 )(
     input wire te_clk_i,
     input wire te_reset,
-    input wire te_sync_i,
-    input wire te_eop_i,
+    //input wire te_sync_i,
+    //input wire te_eop_i,
 
     input wire [3:0]te_pid_nibble_i,
-    input wire te_pid_valid_i,
+    //input wire te_pid_valid_i,
 
     input wire te_token_trigger_i, //token handler net
     input wire te_token_valid_i,
