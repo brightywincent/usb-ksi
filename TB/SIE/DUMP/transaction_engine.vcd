@@ -1,0 +1,943 @@
+$date
+	Sat Jul  4 20:13:36 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module transaction_engine_tb $end
+$var wire 1 ! te_abort $end
+$var wire 1 " te_ignore $end
+$var wire 10 # te_timer [9:0] $end
+$var wire 1 $ te_setup_done_o $end
+$var wire 1 % te_send_stall_o $end
+$var wire 1 & te_send_nak_o $end
+$var wire 1 ' te_send_data_o $end
+$var wire 1 ( te_send_ack_o $end
+$var wire 1 ) te_protocol_err_o $end
+$var wire 1 * te_data_toggle_o $end
+$var wire 1 + te_clear_endp_buff_o $end
+$var reg 1 , te_ack_i $end
+$var reg 7 - te_addr_i [6:0] $end
+$var reg 1 . te_clk_i $end
+$var reg 1 / te_crc16_fail_i $end
+$var reg 1 0 te_crc5_fail_i $end
+$var reg 1 1 te_data_pac_err_i $end
+$var reg 1 2 te_data_trigger_i $end
+$var reg 1 3 te_data_valid_i $end
+$var reg 1 4 te_endp_data_fail_i $end
+$var reg 1 5 te_endp_data_toggle_i $end
+$var reg 1 6 te_endp_empty_i $end
+$var reg 4 7 te_endp_i [3:0] $end
+$var reg 1 8 te_endp_ready_i $end
+$var reg 1 9 te_endp_stalled_i $end
+$var reg 1 : te_endp_tx_done_i $end
+$var reg 1 ; te_handshake_trigger_i $end
+$var reg 1 < te_nak_i $end
+$var reg 4 = te_pid_nibble_i [3:0] $end
+$var reg 1 > te_reset $end
+$var reg 1 ? te_stall_i $end
+$var reg 1 @ te_timeout_i $end
+$var reg 1 A te_token_pac_err_i $end
+$var reg 1 B te_token_trigger_i $end
+$var reg 1 C te_token_valid_i $end
+$scope module te_1 $end
+$var wire 1 , te_ack_i $end
+$var wire 7 D te_addr_i [6:0] $end
+$var wire 1 . te_clk_i $end
+$var wire 1 / te_crc16_fail_i $end
+$var wire 1 0 te_crc5_fail_i $end
+$var wire 1 1 te_data_pac_err_i $end
+$var wire 1 2 te_data_trigger_i $end
+$var wire 1 3 te_data_valid_i $end
+$var wire 1 4 te_endp_data_fail_i $end
+$var wire 1 5 te_endp_data_toggle_i $end
+$var wire 1 6 te_endp_empty_i $end
+$var wire 4 E te_endp_i [3:0] $end
+$var wire 1 8 te_endp_ready_i $end
+$var wire 1 9 te_endp_stalled_i $end
+$var wire 1 : te_endp_tx_done_i $end
+$var wire 1 ; te_handshake_trigger_i $end
+$var wire 1 < te_nak_i $end
+$var wire 4 F te_pid_nibble_i [3:0] $end
+$var wire 1 > te_reset $end
+$var wire 1 ? te_stall_i $end
+$var wire 1 @ te_timeout_i $end
+$var wire 1 A te_token_pac_err_i $end
+$var wire 1 B te_token_trigger_i $end
+$var wire 1 C te_token_valid_i $end
+$var parameter 3 G CONFIRM $end
+$var parameter 3 H DATA $end
+$var parameter 3 I IDLE $end
+$var parameter 3 J IN $end
+$var parameter 3 K IN_TR $end
+$var parameter 3 L OUT $end
+$var parameter 3 M OUT_TR $end
+$var parameter 3 N RESPONSE $end
+$var parameter 10 O RESPONSE_TIMEOUT $end
+$var parameter 3 P SETUP_TR $end
+$var reg 3 Q STATE [2:0] $end
+$var reg 3 R SUB_STATE [2:0] $end
+$var reg 1 S te_abort $end
+$var reg 1 + te_clear_endp_buff_o $end
+$var reg 1 * te_data_toggle_o $end
+$var reg 1 T te_ignore $end
+$var reg 1 ) te_protocol_err_o $end
+$var reg 1 ( te_send_ack_o $end
+$var reg 1 ' te_send_data_o $end
+$var reg 1 & te_send_nak_o $end
+$var reg 1 % te_send_stall_o $end
+$var reg 1 $ te_setup_done_o $end
+$var reg 10 U te_timer [9:0] $end
+$var reg 1 V te_timer_en $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b11 P
+b1100110000 O
+b11 N
+b1 M
+b1 L
+b10 K
+b1 J
+b0 I
+b10 H
+b1 G
+$end
+#0
+$dumpvars
+0V
+b0 U
+0T
+0S
+b0 R
+b0 Q
+b1 F
+b0 E
+b0 D
+0C
+0B
+0A
+0@
+0?
+1>
+b1 =
+0<
+0;
+0:
+09
+08
+b0 7
+06
+05
+04
+03
+02
+01
+00
+0/
+1.
+b0 -
+0,
+0+
+0*
+0)
+0(
+0'
+0&
+0%
+0$
+b0 #
+0"
+0!
+$end
+#1
+0.
+#2
+1.
+0>
+#3
+0.
+#4
+1.
+#5
+0.
+#6
+1)
+1.
+12
+#7
+0.
+#8
+0)
+1.
+02
+#9
+0.
+#10
+1.
+#11
+0.
+#12
+1.
+#13
+0.
+#14
+1.
+#15
+0.
+#16
+1)
+1.
+1;
+#17
+0.
+#18
+0)
+1.
+0;
+#19
+0.
+#20
+b1 Q
+1.
+1B
+#21
+0.
+#22
+1.
+0B
+#23
+0.
+#24
+1.
+#25
+0.
+#26
+b0 Q
+1!
+1S
+1.
+1@
+#27
+0.
+#28
+0!
+0S
+1.
+0@
+#29
+0.
+#30
+1.
+#31
+0.
+#32
+b1 Q
+1.
+1B
+#33
+0.
+#34
+1.
+0B
+#35
+0.
+#36
+1.
+#37
+0.
+#38
+b0 Q
+1"
+1T
+1.
+1A
+#39
+0.
+#40
+0"
+0T
+1.
+0A
+#41
+0.
+#42
+1.
+#43
+0.
+#44
+b1 Q
+1.
+1B
+#45
+0.
+#46
+1.
+0B
+#47
+0.
+#48
+1.
+#49
+0.
+#50
+b0 Q
+1"
+1T
+1.
+10
+#51
+0.
+#52
+0"
+0T
+1.
+00
+#53
+0.
+#54
+1.
+#55
+0.
+#56
+b1 Q
+1.
+1B
+#57
+0.
+#58
+1.
+0B
+#59
+0.
+#60
+1.
+#61
+0.
+#62
+1.
+#63
+0.
+#64
+1.
+#65
+0.
+#66
+1.
+#67
+0.
+#68
+1.
+#69
+0.
+#70
+1.
+#71
+0.
+#72
+1.
+#73
+0.
+#74
+1.
+#75
+0.
+#76
+1.
+#77
+0.
+#78
+1V
+b1 R
+1.
+1C
+#79
+0.
+#80
+b1 #
+b1 U
+1.
+0C
+#81
+0.
+#82
+b10 #
+b10 U
+1.
+#83
+0.
+#84
+b11 #
+b11 U
+b0 Q
+b0 R
+1!
+1S
+1.
+1B
+#85
+0.
+#86
+b100 #
+b100 U
+0V
+0!
+0S
+1.
+0B
+#87
+0.
+#88
+b0 #
+b0 U
+1.
+#89
+0.
+#90
+b1 Q
+1.
+1B
+#91
+0.
+#92
+1.
+0B
+#93
+0.
+#94
+1.
+#95
+0.
+#96
+1.
+#97
+0.
+#98
+1.
+#99
+0.
+#100
+1.
+#101
+0.
+#102
+1.
+#103
+0.
+#104
+1.
+#105
+0.
+#106
+1.
+#107
+0.
+#108
+1.
+#109
+0.
+#110
+1.
+#111
+0.
+#112
+1V
+b1 R
+1.
+1C
+#113
+0.
+#114
+b1 #
+b1 U
+1.
+0C
+#115
+0.
+#116
+b10 #
+b10 U
+1.
+#117
+0.
+#118
+b11 #
+b11 U
+b0 Q
+b0 R
+1)
+1.
+1;
+#119
+0.
+#120
+b100 #
+b100 U
+0V
+0)
+1.
+0;
+#121
+0.
+#122
+b0 #
+b0 U
+b1 Q
+1.
+1B
+#123
+0.
+#124
+1.
+0B
+#125
+0.
+#126
+1.
+#127
+0.
+#128
+1.
+#129
+0.
+#130
+1.
+#131
+0.
+#132
+1.
+#133
+0.
+#134
+1.
+#135
+0.
+#136
+1.
+#137
+0.
+#138
+1.
+#139
+0.
+#140
+1.
+#141
+0.
+#142
+1.
+#143
+0.
+#144
+1V
+b1 R
+1.
+1C
+#145
+0.
+#146
+b1 #
+b1 U
+1.
+0C
+#147
+0.
+#148
+b10 #
+b10 U
+1.
+#149
+0.
+#150
+b11 #
+b11 U
+1.
+#151
+0.
+#152
+b100 #
+b100 U
+1.
+#153
+0.
+#154
+b101 #
+b101 U
+1.
+#155
+0.
+#156
+b110 #
+b110 U
+0V
+b10 R
+1.
+12
+#157
+0.
+#158
+b0 #
+b0 U
+1.
+02
+#159
+0.
+#160
+1.
+#161
+0.
+#162
+1.
+#163
+0.
+#164
+b0 Q
+b0 R
+1"
+1T
+1.
+11
+#165
+0.
+#166
+0"
+0T
+1.
+01
+#167
+0.
+#168
+b1 Q
+1.
+1B
+#169
+0.
+#170
+1.
+0B
+#171
+0.
+#172
+1.
+#173
+0.
+#174
+1.
+#175
+0.
+#176
+1.
+#177
+0.
+#178
+1.
+#179
+0.
+#180
+1.
+#181
+0.
+#182
+1.
+#183
+0.
+#184
+1.
+#185
+0.
+#186
+1.
+#187
+0.
+#188
+1.
+#189
+0.
+#190
+1V
+b1 R
+1.
+1C
+#191
+0.
+#192
+b1 #
+b1 U
+1.
+0C
+#193
+0.
+#194
+b10 #
+b10 U
+1.
+#195
+0.
+#196
+b11 #
+b11 U
+1.
+#197
+0.
+#198
+b100 #
+b100 U
+1.
+#199
+0.
+#200
+b101 #
+b101 U
+1.
+#201
+0.
+#202
+b110 #
+b110 U
+0V
+b10 R
+1.
+12
+#203
+0.
+#204
+b0 #
+b0 U
+1.
+02
+#205
+0.
+#206
+1.
+#207
+0.
+#208
+1.
+#209
+0.
+#210
+1.
+#211
+0.
+#212
+1.
+#213
+0.
+#214
+1.
+#215
+0.
+#216
+1.
+#217
+0.
+#218
+1.
+#219
+0.
+#220
+1.
+#221
+0.
+#222
+1.
+#223
+0.
+#224
+b0 Q
+b0 R
+1"
+1T
+1.
+1/
+#225
+0.
+#226
+0"
+0T
+1.
+0/
+#227
+0.
+#228
+b1 Q
+1.
+1B
+#229
+0.
+#230
+1.
+0B
+#231
+0.
+#232
+1.
+#233
+0.
+#234
+1.
+#235
+0.
+#236
+1.
+#237
+0.
+#238
+1.
+#239
+0.
+#240
+1.
+#241
+0.
+#242
+1.
+#243
+0.
+#244
+1.
+#245
+0.
+#246
+1.
+#247
+0.
+#248
+1.
+#249
+0.
+#250
+1V
+b1 R
+1.
+1C
+#251
+0.
+#252
+b1 #
+b1 U
+1.
+0C
+#253
+0.
+#254
+b10 #
+b10 U
+1.
+#255
+0.
+#256
+b11 #
+b11 U
+1.
+#257
+0.
+#258
+b100 #
+b100 U
+1.
+#259
+0.
+#260
+b101 #
+b101 U
+1.
+#261
+0.
+#262
+b110 #
+b110 U
+0V
+b10 R
+1.
+12
+#263
+0.
+#264
+b0 #
+b0 U
+1.
+02
+#265
+0.
+#266
+1.
+#267
+0.
+#268
+1.
+#269
+0.
+#270
+1.
+#271
+0.
+#272
+1.
+#273
+0.
+#274
+1.
+#275
+0.
+#276
+1.
+#277
+0.
+#278
+1.
+#279
+0.
+#280
+1.
+#281
+0.
+#282
+1.
+#283
+0.
+#284
+b0 Q
+b0 R
+1*
+1(
+1.
+13
+#285
+0.
+#286
+0*
+0(
+1.
+03
+#287
+0.
+#288
+1.
+#289
+0.
+#290
+1.
+#291
+0.
+#292
+1.
+#293
+0.
+#294
+1.
+#295
+0.
+#296
+1.
+#297
+0.
+#298
+1.
+#299
+0.
