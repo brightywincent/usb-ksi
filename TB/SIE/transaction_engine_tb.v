@@ -1,4 +1,7 @@
 module transaction_engine_tb;
+    wire te_abort=te_1.te_abort;
+    wire te_ignore=te_1.te_ignore;
+    wire [9:0]te_timer=te_1.te_timer;
     reg te_clk_i;
     reg te_reset;
     //reg te_sync_i;
@@ -92,7 +95,7 @@ module transaction_engine_tb;
         te_reset=1'b1;
         //te_sync_i=1'b0;
         //te_eop_i=1'b0;
-        te_pid_nibble_i=4'b0;
+        te_pid_nibble_i=4'b0001;
         //te_pid_valid_i=1'b0;
     //token handler net
         te_token_trigger_i=1'b0; 
@@ -127,8 +130,70 @@ module transaction_engine_tb;
 
     initial begin
         #2 te_reset=1'b0;
-        //OUT transaction
-        #2 
+        //* //OUT transaction
+        #4 te_data_trigger_i=1'b1;  //data triggered - protocol error
+        #2 te_data_trigger_i=1'b0;
+        #8 te_handshake_trigger_i=1'b1;  //handshake triggered - protocol error
+        #2 te_handshake_trigger_i=1'b0;
+
+        #2 te_token_trigger_i=1'b1;  //out triggered - timeout
+        #2 te_token_trigger_i=1'b0;
+        #4 te_timeout_i=1'b1;
+        #2 te_timeout_i=1'b0;
+
+        #4 te_token_trigger_i=1'b1;  //out triggered - token packet error
+        #2 te_token_trigger_i=1'b0;
+        #4 te_token_pac_err_i=1'b1;
+        #2 te_token_pac_err_i=1'b0;
+
+        #4 te_token_trigger_i=1'b1;  //out triggered - crc5 fail
+        #2 te_token_trigger_i=1'b0;
+        #4 te_crc5_fail_i=1'b1;
+        #2 te_crc5_fail_i=1'b0;
+
+        #4 te_token_trigger_i=1'b1;  //out triggered - abort
+        #2 te_token_trigger_i=1'b0;
+        #20 te_token_valid_i=1'b1;
+        #2 te_token_valid_i=1'b0;
+        #4 te_token_trigger_i=1'b1;
+        #2 te_token_trigger_i=1'b0;
+
+        #4 te_token_trigger_i=1'b1;  //out triggered - protocol error
+        #2 te_token_trigger_i=1'b0;
+        #20 te_token_valid_i=1'b1;
+        #2 te_token_valid_i=1'b0;
+        #4 te_handshake_trigger_i=1'b1;
+        #2 te_handshake_trigger_i=1'b0;
+
+        #2 te_token_trigger_i=1'b1;  //out triggered
+        #2 te_token_trigger_i=1'b0;
+        #20 te_token_valid_i=1'b1;
+        #2 te_token_valid_i=1'b0;
+        #10 te_data_trigger_i=1'b1;  //data triggered - data packet error
+        #2 te_data_trigger_i=1'b0;
+        #6 te_data_pac_err_i=1'b1;
+        #2 te_data_pac_err_i=1'b0;
+
+        #2 te_token_trigger_i=1'b1;  //out triggered
+        #2 te_token_trigger_i=1'b0;
+        #20 te_token_valid_i=1'b1;
+        #2 te_token_valid_i=1'b0;
+        #10 te_data_trigger_i=1'b1;  //data triggered - crc16 fail
+        #2 te_data_trigger_i=1'b0;
+        #20 te_crc16_fail_i=1'b1;
+        #2 te_crc16_fail_i=1'b0;
+        
+        #2 te_token_trigger_i=1'b1;  //out triggered
+        #2 te_token_trigger_i=1'b0;
+        #20 te_token_valid_i=1'b1;
+        #2 te_token_valid_i=1'b0;
+        #10 te_data_trigger_i=1'b1;  //data triggered
+        #2 te_data_trigger_i=1'b0;
+        #20 te_data_valid_i=1'b1;
+        #2 te_data_valid_i=1'b0;
+
+        #8 
+        //*/
         #5 $finish;
     end
 endmodule
