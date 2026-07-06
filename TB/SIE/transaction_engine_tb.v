@@ -81,13 +81,17 @@ module transaction_engine_tb;
         //OUT transaction
        // $display("|Time|Clk|Rst|Timeout|PID_in|T_trigger|T_valid|T_err|T_crc5_fail|Timer|D_trigger|D_valid|D_err|D_crc16_fail|Abort|Ignore|Send_ACK|Data_toggle|");
         //IN transaction 
-        $display("|Time|Clk|Rst|Timeout|PID_in|T_trig|T_ok|T_err|crc5_er|Timer|EP_err|EP_empty|EP_TX_ok|EP_stld|EP_ready|NAK|STALL|DATA|D_tog|Clr_buff|Abort|Ignore|Pcol_err|");
+       // $display("|Time|Clk|Rst|Timeout|PID_in|T_trig|T_ok|T_err|crc5_er|Timer|EP_err|EP_empty|EP_TX_ok|EP_stld|EP_ready|NAK|STALL|DATA|D_tog|Clr_buff|Abort|Ignore|Pcol_err|");
+        //SETUP Transaction
+        $display("|Time|Clk|Rst|Timeout|PID_in|T_trigger|T_valid|T_err|T_crc5_fail|Timer|D_trigger|D_valid|D_err|D_crc16_fail|Abort|Ignore|Send_ACK|Data_toggle|");   
     end
     always@(posedge te_clk_i)begin
         //OUT transaction
        // $display("|%4t| %b | %b |   %b   | %4b |    %b    |   %b   |  %b  |     %b     | %4d|    %b    |   %b   |  %b  |     %b      |  %b  |  %b   |   %b    |     %b     |",$time,te_clk_i,te_reset,te_timeout_i,te_pid_nibble_i,te_token_trigger_i,te_token_valid_i,te_token_pac_err_i,te_crc5_fail_i,te_1.te_timer,te_data_trigger_i,te_data_valid_i,te_data_pac_err_i,te_crc16_fail_i,te_1.te_abort,te_1.te_ignore,te_send_ack_o,te_data_toggle_o);
         //IN transaction
-        $display("|%4t| %b | %b |   %b   | %4b |  %b   | %b  |  %b  |   %b   | %4d|  %b   |   %b    |   %b    |   %b   |   %b    | %b |  %b  | %b  |  %b  |    %b   |  %b  |  %b   |    %b   |",$time,te_clk_i,te_reset,te_timeout_i,te_pid_nibble_i,te_token_trigger_i,te_token_valid_i,te_token_pac_err_i,te_crc5_fail_i,te_1.te_timer,te_endp_data_fail_i,te_endp_empty_i,te_endp_tx_done_i,te_endp_stalled_i,te_endp_ready_i,te_send_nak_o,te_send_stall_o,te_send_data_o,te_data_toggle_o,te_clear_endp_buff_o,te_1.te_abort,te_1.te_ignore,te_protocol_err_o);
+        //$display("|%4t| %b | %b |   %b   | %4b |  %b   | %b  |  %b  |   %b   | %4d|  %b   |   %b    |   %b    |   %b   |   %b    | %b |  %b  | %b  |  %b  |    %b   |  %b  |  %b   |    %b   |",$time,te_clk_i,te_reset,te_timeout_i,te_pid_nibble_i,te_token_trigger_i,te_token_valid_i,te_token_pac_err_i,te_crc5_fail_i,te_1.te_timer,te_endp_data_fail_i,te_endp_empty_i,te_endp_tx_done_i,te_endp_stalled_i,te_endp_ready_i,te_send_nak_o,te_send_stall_o,te_send_data_o,te_data_toggle_o,te_clear_endp_buff_o,te_1.te_abort,te_1.te_ignore,te_protocol_err_o);
+        //SETUP transaction
+        $display("|%4t| %b | %b |   %b   | %4b |    %b    |   %b   |  %b  |     %b     | %4d|    %b    |   %b   |  %b  |     %b      |  %b  |  %b   |   %b    |     %b     |",$time,te_clk_i,te_reset,te_timeout_i,te_pid_nibble_i,te_token_trigger_i,te_token_valid_i,te_token_pac_err_i,te_crc5_fail_i,te_1.te_timer,te_data_trigger_i,te_data_valid_i,te_data_pac_err_i,te_crc16_fail_i,te_1.te_abort,te_1.te_ignore,te_send_ack_o,te_data_toggle_o);
     end
 
     initial begin
@@ -130,63 +134,77 @@ module transaction_engine_tb;
         //OUT transaction
         /*
         #4 te_data_trigger_i=1'b1;  //data triggered - protocol error
-            te_pid_nibble_i=4'b0001;
+            te_pid_nibble_i=4'b0011;
         #2 te_data_trigger_i=1'b0;
         #8 te_handshake_trigger_i=1'b1;  //handshake triggered - protocol error
+        te_pid_nibble_i=4'b0010;
         #2 te_handshake_trigger_i=1'b0;
 
         #2 te_token_trigger_i=1'b1;  //out triggered - timeout
+        te_pid_nibble_i=4'b0001;
         #2 te_token_trigger_i=1'b0;
         #4 te_timeout_i=1'b1;
         #2 te_timeout_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //out triggered - token packet error
+        te_pid_nibble_i=4'b0001;
         #2 te_token_trigger_i=1'b0;
         #4 te_token_pac_err_i=1'b1;
         #2 te_token_pac_err_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //out triggered - crc5 fail
+        te_pid_nibble_i=4'b0001;
         #2 te_token_trigger_i=1'b0;
         #4 te_crc5_fail_i=1'b1;
         #2 te_crc5_fail_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //out triggered - abort
+        te_pid_nibble_i=4'b0001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
         #4 te_token_trigger_i=1'b1;
+        te_pid_nibble_i=4'b0001;
         #2 te_token_trigger_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //out triggered - protocol error
+        te_pid_nibble_i=4'b0001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
         #4 te_handshake_trigger_i=1'b1;
+        te_pid_nibble_i=4'b0010;
         #2 te_handshake_trigger_i=1'b0;
 
         #2 te_token_trigger_i=1'b1;  //out triggered
+        te_pid_nibble_i=4'b0001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
         #10 te_data_trigger_i=1'b1;  //data triggered - data packet error
+        te_pid_nibble_i=4'b0011;
         #2 te_data_trigger_i=1'b0;
         #6 te_data_pac_err_i=1'b1;
         #2 te_data_pac_err_i=1'b0;
 
         #2 te_token_trigger_i=1'b1;  //out triggered
+        te_pid_nibble_i=4'b0001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
         #10 te_data_trigger_i=1'b1;  //data triggered - crc16 fail
+        te_pid_nibble_i=4'b0011;
         #2 te_data_trigger_i=1'b0;
         #20 te_crc16_fail_i=1'b1;
         #2 te_crc16_fail_i=1'b0;
         
         #2 te_token_trigger_i=1'b1;  //out triggered
+        te_pid_nibble_i=4'b0001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
         #10 te_data_trigger_i=1'b1;  //data triggered
+        te_pid_nibble_i=4'b0011;
         #2 te_data_trigger_i=1'b0;
         #20 te_data_valid_i=1'b1;
         #2 te_data_valid_i=1'b0;
@@ -194,43 +212,52 @@ module transaction_engine_tb;
         #8 
         */
         //IN transaction
-        //*
+        /*
          #4 te_data_trigger_i=1'b1;  //data triggered - protocol error
-            te_pid_nibble_i=4'b1001;
+            te_pid_nibble_i=4'b1011;
         #2 te_data_trigger_i=1'b0;
         #8 te_handshake_trigger_i=1'b1;  //handshake triggered - protocol error
+        te_pid_nibble_i=4'b0010;
         #2 te_handshake_trigger_i=1'b0;
 
         #2 te_token_trigger_i=1'b1;  //IN triggered - timeout
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
         #4 te_timeout_i=1'b1;
         #2 te_timeout_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //IN triggered - token packet error
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
         #4 te_token_pac_err_i=1'b1;
         #2 te_token_pac_err_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //IN triggered - crc5 fail
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
         #4 te_crc5_fail_i=1'b1;
         #2 te_crc5_fail_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //IN triggered - abort
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
         #4 te_token_trigger_i=1'b1;
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //IN triggered - protocol error
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
         #4 te_handshake_trigger_i=1'b1;
+        te_pid_nibble_i=4'b0010;
         #2 te_handshake_trigger_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //IN triggered - ENDP empty
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
@@ -238,6 +265,7 @@ module transaction_engine_tb;
         #2 te_endp_empty_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //IN triggered - ENDP stalled
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
@@ -245,6 +273,7 @@ module transaction_engine_tb;
         #2 te_endp_stalled_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //IN triggered - ENDP data failed to send (problem in buffer)
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
@@ -254,6 +283,7 @@ module transaction_engine_tb;
         #2 te_endp_data_fail_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //IN triggered - ENDP TX done but stall received
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
@@ -262,9 +292,11 @@ module transaction_engine_tb;
         #20 te_endp_tx_done_i=1'b1;
         #2 te_endp_tx_done_i=1'b0;
         #4 te_stall_i=1'b1;
+        te_pid_nibble_i=4'b1110;
         #2 te_stall_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //IN triggered - ENDP TX done but nak received
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
@@ -273,9 +305,11 @@ module transaction_engine_tb;
         #20 te_endp_tx_done_i=1'b1;
         #2 te_endp_tx_done_i=1'b0;
         #4 te_nak_i=1'b1;
+        te_pid_nibble_i=4'b1010;
         #2 te_nak_i=1'b0;
 
         #4 te_token_trigger_i=1'b1;  //IN triggered - ENDP TX done and ack received
+        te_pid_nibble_i=4'b1001;
         #2 te_token_trigger_i=1'b0;
         #20 te_token_valid_i=1'b1;
         #2 te_token_valid_i=1'b0;
@@ -284,7 +318,94 @@ module transaction_engine_tb;
         #20 te_endp_tx_done_i=1'b1;
         #2 te_endp_tx_done_i=1'b0;
         #4 te_ack_i=1'b1;
+        te_pid_nibble_i=4'b0010;
         #2 te_ack_i=1'b0;
+        */
+        //SETUP transaction
+        //*
+        #4 te_data_trigger_i=1'b1;  //data triggered - protocol error
+            te_pid_nibble_i=4'b0011;
+        #2 te_data_trigger_i=1'b0;
+        #8 te_handshake_trigger_i=1'b1;  //handshake triggered - protocol error
+            te_pid_nibble_i=4'b0010;
+        #2 te_handshake_trigger_i=1'b0;
+
+        #2 te_token_trigger_i=1'b1;  //out triggered - timeout
+        te_pid_nibble_i=4'b0001;
+        #2 te_token_trigger_i=1'b0;
+        #4 te_timeout_i=1'b1;
+        #2 te_timeout_i=1'b0;
+
+        #4 te_token_trigger_i=1'b1;  //out triggered - token packet error
+        te_pid_nibble_i=4'b0001;
+        #2 te_token_trigger_i=1'b0;
+        #4 te_token_pac_err_i=1'b1;
+        #2 te_token_pac_err_i=1'b0;
+
+        #4 te_token_trigger_i=1'b1;  //out triggered - crc5 fail
+        te_pid_nibble_i=4'b0001;
+        #2 te_token_trigger_i=1'b0;
+        #4 te_crc5_fail_i=1'b1;
+        #2 te_crc5_fail_i=1'b0;
+
+        #4 te_token_trigger_i=1'b1;  //out triggered - abort
+        te_pid_nibble_i=4'b0001;
+        #2 te_token_trigger_i=1'b0;
+        #20 te_token_valid_i=1'b1;
+        #2 te_token_valid_i=1'b0;
+        #4 te_token_trigger_i=1'b1;
+        #2 te_token_trigger_i=1'b0;
+
+        #4 te_token_trigger_i=1'b1;  //out triggered - protocol error
+        te_pid_nibble_i=4'b0001;
+        #2 te_token_trigger_i=1'b0;
+        #20 te_token_valid_i=1'b1;
+        #2 te_token_valid_i=1'b0;
+        #4 te_handshake_trigger_i=1'b1;
+        te_pid_nibble_i=4'b0010;
+        #2 te_handshake_trigger_i=1'b0;
+
+        #4 te_token_trigger_i=1'b1;  //out triggered
+        te_pid_nibble_i=4'b0001;
+        #2 te_token_trigger_i=1'b0;
+        #20 te_token_valid_i=1'b1;
+        #2 te_token_valid_i=1'b0;
+        #10 te_data_trigger_i=1'b1;  //data triggered - data1 received
+            te_pid_nibble_i=4'b0111;
+        #2 te_data_trigger_i=1'b0;
+
+        #4 te_token_trigger_i=1'b1;  //out triggered
+        te_pid_nibble_i=4'b0001;
+        #2 te_token_trigger_i=1'b0;
+        #20 te_token_valid_i=1'b1;
+        #2 te_token_valid_i=1'b0;
+        #10 te_data_trigger_i=1'b1;  //data triggered - data packet error
+            te_pid_nibble_i=4'b0011;
+        #2 te_data_trigger_i=1'b0;
+        #6 te_data_pac_err_i=1'b1;
+        #2 te_data_pac_err_i=1'b0;
+
+        #2 te_token_trigger_i=1'b1;  //out triggered
+        te_pid_nibble_i=4'b0001;
+        #2 te_token_trigger_i=1'b0;
+        #20 te_token_valid_i=1'b1;
+        #2 te_token_valid_i=1'b0;
+        #10 te_data_trigger_i=1'b1;  //data triggered - crc16 fail
+            te_pid_nibble_i=4'b0011;
+        #2 te_data_trigger_i=1'b0;
+        #20 te_crc16_fail_i=1'b1;
+        #2 te_crc16_fail_i=1'b0;
+        
+        #2 te_token_trigger_i=1'b1;  //out triggered
+            te_pid_nibble_i=4'b0001;
+        #2 te_token_trigger_i=1'b0;
+        #20 te_token_valid_i=1'b1;
+        #2 te_token_valid_i=1'b0;
+        #10 te_data_trigger_i=1'b1;  //data triggered
+            te_pid_nibble_i=4'b0011;
+        #2 te_data_trigger_i=1'b0;
+        #20 te_data_valid_i=1'b1;
+        #2 te_data_valid_i=1'b0;
         //*/
         #7 $finish;
     end
