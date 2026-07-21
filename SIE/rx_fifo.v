@@ -28,6 +28,8 @@ module rx_fifo(
         else begin
             rf_overflow_o<=1'b0;
             rf_underflow_o<=1'b0;
+            rf_empty_o<=(byte_count==7'b0);
+            rf_full_o<=(byte_count==7'd64);
             case({rf_write_i,rf_read_i})
                 2'b00 : begin
                     rf_byte_o<=8'bx;
@@ -61,8 +63,6 @@ module rx_fifo(
                     rf_byte_o<=8'bx;
                 end
             endcase
-            rf_empty_o<=(byte_count==7'b0);
-            rf_full_o<=(byte_count==7'd64);
         end
     end
 
