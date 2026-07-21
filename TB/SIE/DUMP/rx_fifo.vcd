@@ -1,11 +1,11 @@
 $date
-	Fri Jun 26 16:17:32 2026
+	Tue Jul 21 19:34:42 2026
 $end
 $version
 	Icarus Verilog
 $end
 $timescale
-	1s
+	1ns
 $end
 $scope module rx_fifo_tb $end
 $var wire 1 ! rf_underflow_o $end
@@ -266,9 +266,9 @@ b1010101 .
 #65
 0'
 #66
-1$
 bx %
 bx .
+1$
 1'
 0(
 #67
@@ -357,9 +357,9 @@ b1111 +
 #91
 0'
 #92
-0$
 b10 ,
 b101 /
+0$
 1'
 b10 0
 #93
@@ -799,8 +799,8 @@ b1000000 0
 #217
 0'
 #218
-1#
 1"
+1#
 1'
 #219
 0'
