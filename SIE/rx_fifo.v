@@ -21,14 +21,15 @@ module rx_fifo(
             rf_underflow_o<=1'b0;
             rf_full_o<=1'b0;
             rf_overflow_o<=1'b0;
-            rd_ptr<=6'b0;
+            rd_ptr<=6'd0;
             wr_ptr<=6'b0;
+            //rd_ptr<=wr_ptr-1;
             byte_count<=7'b0;
         end
         else begin
             rf_overflow_o<=1'b0;
             rf_underflow_o<=1'b0;
-            rf_empty_o<=(byte_count==7'b0);
+            rf_empty_o<=(byte_count==7'b0 && rf_write_i==1'b0);
             rf_full_o<=(byte_count==7'd64);
             case({rf_write_i,rf_read_i})
                 2'b00 : begin
@@ -52,12 +53,18 @@ module rx_fifo(
                     end
                     else begin
                         rf_byte_o<=fifo_mem[rd_ptr];
-                        rd_ptr<=rd_ptr+1;
                         byte_count<=byte_count-1;
+                        if(rd_ptr==wr_ptr)
+                            rf_empty_o<=1'b1;
+                        else
+                            rd_ptr<=rd_ptr+1;
                     end                       
                 end
                 2'b11 : begin
-                    rf_byte_o<=rf_byte_i;
+                    fifo_mem[wr_ptr]<=rf_byte_i;
+                    wr_ptr<=wr_ptr+1;
+                    rf_byte_o<=fifo_mem[rd_ptr];
+                    rd_ptr<=rd_ptr+1;
                 end
                 default : begin
                     rf_byte_o<=8'bx;
