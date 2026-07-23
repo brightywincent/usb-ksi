@@ -42,7 +42,7 @@ module ep0_buffer(
             end
             if(ep0b_packet_commit_i)begin
                 ep0b_packet_valid_o<=1'b1;
-                ep0b_packet_length_o<=wr_ptr+1;
+                ep0b_packet_length_o<=wr_ptr;
             end
         end
     end
