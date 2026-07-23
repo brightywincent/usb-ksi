@@ -1,0 +1,284 @@
+$date
+	Thu Jul 23 19:14:23 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module ep0_buffer_tb $end
+$var wire 8 ! ep0b_rd_byte_o [7:0] $end
+$var wire 1 " ep0b_packet_valid_o $end
+$var wire 8 # ep0b_packet_length_o [7:0] $end
+$var wire 1 $ ep0b_empty_o $end
+$var reg 1 % ep0b_clear $end
+$var reg 1 & ep0b_clk_i $end
+$var reg 1 ' ep0b_en $end
+$var reg 1 ( ep0b_packet_commit_i $end
+$var reg 8 ) ep0b_rd_addr_i [7:0] $end
+$var reg 1 * ep0b_rd_en_i $end
+$var reg 1 + ep0b_reset $end
+$var reg 8 , ep0b_wr_byte_i [7:0] $end
+$var reg 1 - ep0b_wr_en_i $end
+$scope module ep0b_1 $end
+$var wire 1 % ep0b_clear $end
+$var wire 1 & ep0b_clk_i $end
+$var wire 1 ' ep0b_en $end
+$var wire 1 ( ep0b_packet_commit_i $end
+$var wire 8 . ep0b_rd_addr_i [7:0] $end
+$var wire 1 * ep0b_rd_en_i $end
+$var wire 1 + ep0b_reset $end
+$var wire 8 / ep0b_wr_byte_i [7:0] $end
+$var wire 1 - ep0b_wr_en_i $end
+$var reg 1 $ ep0b_empty_o $end
+$var reg 8 0 ep0b_packet_length_o [7:0] $end
+$var reg 1 " ep0b_packet_valid_o $end
+$var reg 8 1 ep0b_rd_byte_o [7:0] $end
+$var reg 8 2 wr_ptr [7:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b0 2
+bx 1
+b0 0
+bx /
+bx .
+0-
+bx ,
+1+
+0*
+bx )
+0(
+0'
+1&
+0%
+1$
+b0 #
+0"
+bx !
+$end
+#1
+0&
+#2
+1&
+0+
+#3
+0&
+#4
+1&
+#5
+0&
+#6
+1&
+1'
+#7
+0&
+#8
+1&
+#9
+0&
+#10
+1&
+#11
+0&
+#12
+0$
+b1 2
+1&
+b1 ,
+b1 /
+1-
+#13
+0&
+#14
+b10 2
+1&
+b11 ,
+b11 /
+#15
+0&
+#16
+b11 2
+1&
+b111 ,
+b111 /
+#17
+0&
+#18
+b100 2
+1&
+b1111 ,
+b1111 /
+#19
+0&
+#20
+b101 2
+1&
+b11111 ,
+b11111 /
+#21
+0&
+#22
+b110 2
+1&
+b111111 ,
+b111111 /
+#23
+0&
+#24
+b111 2
+1&
+b1111111 ,
+b1111111 /
+#25
+0&
+#26
+b1000 2
+1&
+b11111111 ,
+b11111111 /
+#27
+0&
+#28
+1&
+bx ,
+bx /
+0-
+#29
+0&
+#30
+1&
+#31
+0&
+#32
+1&
+#33
+0&
+#34
+b1000 #
+b1000 0
+1"
+1&
+1(
+#35
+0&
+#36
+1&
+0(
+#37
+0&
+#38
+1&
+#39
+0&
+#40
+1&
+#41
+0&
+#42
+b1 !
+b1 1
+1&
+b0 )
+b0 .
+1*
+#43
+0&
+#44
+b11 !
+b11 1
+1&
+b1 )
+b1 .
+#45
+0&
+#46
+b111 !
+b111 1
+1&
+b10 )
+b10 .
+#47
+0&
+#48
+b1111 !
+b1111 1
+1&
+b11 )
+b11 .
+#49
+0&
+#50
+b11111 !
+b11111 1
+1&
+b100 )
+b100 .
+#51
+0&
+#52
+b111111 !
+b111111 1
+1&
+b101 )
+b101 .
+#53
+0&
+#54
+b1111111 !
+b1111111 1
+1&
+b110 )
+b110 .
+#55
+0&
+#56
+b11111111 !
+b11111111 1
+1&
+b111 )
+b111 .
+#57
+0&
+#58
+1&
+bx )
+bx .
+0*
+#59
+0&
+#60
+1&
+#61
+0&
+#62
+0"
+b0 #
+b0 0
+bx !
+bx 1
+1$
+b0 2
+1&
+1%
+#63
+0&
+#64
+1&
+0%
+#65
+0&
+#66
+1&
+#67
+0&
+#68
+1&
+#69
+0&
