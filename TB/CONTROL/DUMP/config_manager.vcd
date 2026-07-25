@@ -1,0 +1,120 @@
+$date
+	Sat Jul 25 11:45:52 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module config_manager_tb $end
+$var wire 8 ! cm_curr_config_o [7:0] $end
+$var wire 1 " cm_configured_o $end
+$var reg 1 # cm_clk_i $end
+$var reg 1 $ cm_ld_config_i $end
+$var reg 8 % cm_new_config_i [7:0] $end
+$var reg 1 & cm_reset $end
+$scope module cm_1 $end
+$var wire 1 # cm_clk_i $end
+$var wire 1 $ cm_ld_config_i $end
+$var wire 8 ' cm_new_config_i [7:0] $end
+$var wire 1 & cm_reset $end
+$var reg 1 " cm_configured_o $end
+$var reg 8 ( cm_curr_config_o [7:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b0 (
+b0 '
+1&
+b0 %
+0$
+1#
+0"
+b0 !
+$end
+#1
+0#
+#2
+1#
+0&
+#3
+0#
+#4
+1#
+#5
+0#
+#6
+1#
+#7
+0#
+#8
+1#
+#9
+0#
+#10
+1#
+#11
+0#
+#12
+1#
+1$
+#13
+0#
+#14
+1#
+0$
+#15
+0#
+#16
+1#
+#17
+0#
+#18
+1#
+#19
+0#
+#20
+1#
+#21
+0#
+#22
+1#
+#23
+0#
+#24
+1"
+b111 !
+b111 (
+1#
+b111 %
+b111 '
+1$
+#25
+0#
+#26
+1#
+0$
+#27
+0#
+#28
+1#
+#29
+0#
+#30
+1#
+#31
+0#
+#32
+1#
+#33
+0#
+#34
+1#
+#35
+0#
