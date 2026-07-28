@@ -1,7 +1,6 @@
 module descriptor_rom(
     input wire [7:0]dr_rd_addr_i,
-    output wire [7:0]dr_rd_byte_o,
-    output wire dr_byte_valid_o
+    output reg [7:0]dr_rd_byte_o
 );
     
     always @(*)begin
