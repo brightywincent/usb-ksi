@@ -1,0 +1,143 @@
+$date
+	Thu Jul 30 09:45:21 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module descriptor_manager_tb $end
+$var wire 1 ! dm_valid_o $end
+$var wire 8 " dm_length_o [7:0] $end
+$var wire 8 # dm_addr_o [7:0] $end
+$var reg 8 $ dm_index_i [7:0] $end
+$var reg 1 % dm_read_i $end
+$var reg 8 & dm_type_i [7:0] $end
+$scope module dm_1 $end
+$var wire 8 ' dm_index_i [7:0] $end
+$var wire 1 % dm_read_i $end
+$var wire 8 ( dm_type_i [7:0] $end
+$var parameter 8 ) STRING0 $end
+$var parameter 8 * STRING1 $end
+$var parameter 8 + STRING2 $end
+$var parameter 8 , STRING3 $end
+$var reg 8 - dm_addr_o [7:0] $end
+$var reg 8 . dm_length_o [7:0] $end
+$var reg 1 ! dm_valid_o $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b11 ,
+b10 +
+b1 *
+b0 )
+$end
+#0
+$dumpvars
+b0 .
+b0 -
+b0 (
+b0 '
+b0 &
+0%
+b0 $
+b0 #
+b0 "
+0!
+$end
+#3
+1!
+b10010 "
+b10010 .
+b1 &
+b1 (
+1%
+#4
+0!
+b0 "
+b0 .
+0%
+#7
+1!
+b100000 "
+b100000 .
+b10010 #
+b10010 -
+b10 &
+b10 (
+1%
+#8
+0!
+b0 "
+b0 .
+b0 #
+b0 -
+0%
+#11
+1!
+b100 "
+b100 .
+b110010 #
+b110010 -
+b101 &
+b101 (
+1%
+#12
+0!
+b0 "
+b0 .
+b0 #
+b0 -
+0%
+#15
+1!
+b10000 "
+b10000 .
+b110110 #
+b110110 -
+b1 $
+b1 '
+1%
+#16
+0!
+b0 "
+b0 .
+b0 #
+b0 -
+0%
+#19
+1!
+b10000 "
+b10000 .
+b1000110 #
+b1000110 -
+b10 $
+b10 '
+1%
+#20
+0!
+b0 "
+b0 .
+b0 #
+b0 -
+0%
+#23
+1!
+b1110 "
+b1110 .
+b1010110 #
+b1010110 -
+b11 $
+b11 '
+1%
+#24
+0!
+b0 "
+b0 .
+b0 #
+b0 -
+0%
+#29
