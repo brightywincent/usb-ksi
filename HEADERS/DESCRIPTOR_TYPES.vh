@@ -1,5 +1,5 @@
-`ifndef DESCRIPTOR
-`define DESCRIPTOR
+`ifndef DESCRIPTOR_VH
+`define DESCRIPTOR_VH
     
     //DESCRIPTOR TYPES
     `define TYPE_DEVICE 8'h01
