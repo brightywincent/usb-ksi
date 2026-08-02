@@ -27,7 +27,8 @@ module control_engine_ep0_cp #(
 
     output reg [7:0]cecp_addr_o,
     output reg [7:0]cecp_length_o,
-    output reg  [15:0]wLength_o
+    output reg  [15:0]wLength_o,
+    output reg cecp_rd_curr_config_o
 );
 
     localparam IDLE = 3'd0;
@@ -49,6 +50,7 @@ module control_engine_ep0_cp #(
             STATE<=3'b0;
         end
         else begin
+            cecp_rd_curr_config_o<=1'b0;
             case(STATE)
                 IDLE : begin
                     if(cecp_setup_done_i) begin
@@ -68,7 +70,6 @@ module control_engine_ep0_cp #(
                                 CLEAR_FEATURE :
                                 SET_FEATURE :
                                 SET_ADDRESS :
-                                
                                 GET_DESCRIPTOR : begin
                                     case(wValue[15:8])
                                         `TYPE_DEVICE :begin
@@ -78,25 +79,43 @@ module control_engine_ep0_cp #(
                                             end
                                         end
                                         `TYPE_CONFIGURATION : begin
-                                            if(wValue[7:0]==8'h01)begin
+                                            if(wValue[7:0]==8'h00)begin
                                                 cecp_addr_o<=`CONFIGURATION_BASE;
                                                 cecp_length_o<=(wLength < `CONFIGURATION_LENGTH)?wLength:`CONFIGURATION_LENGTH;
                                             end
                                         end
-                                        `TYPE_INTERFACE : begin
-
-                                        end
-                                        `TYPE_ENDPOINT : begin
-
-                                        end
                                         `TYPE_STRING : begin
-                                            if()
+                                            case(wValue[7:0])
+                                                8'h00 : begin
+                                                    cecp_addr_o<=`STRING0_BASE;
+                                                    cecp_length_o<=(wLength < `STRING0_LENGTH)?wLength:`STRING0_LENGTH;     
+                                                end
+                                                8'h01 : begin
+                                                    cecp_addr_o<=`STRING1_BASE;
+                                                    cecp_length_o<=(wLength < `STRING1_LENGTH)?wLength:`STRING1_LENGTH;     
+                                                end
+                                                8'h02 : begin
+                                                    cecp_addr_o<=`STRING2_BASE;
+                                                    cecp_length_o<=(wLength < `STRING2_LENGTH)?wLength:`STRING2_LENGTH;     
+                                                
+                                                end
+                                                8'h03 : begin
+                                                    cecp_addr_o<=`STRING3_BASE;
+                                                    cecp_length_o<=(wLength < `STRING3_LENGTH)?wLength:`STRING3_LENGTH;     
+                                                
+                                                end
+                                            endcase
                                         end
+                                        STATE<=STATUS;
                                     endcase
                                 end
-
                                 SET_DESCRIPTOR :
-                                GET_CONFIGURATION :
+                                GET_CONFIGURATION : begin
+                                    if(wLength==16'h0001)begin
+                                        cecp_rd_curr_config_o<=1'b1;
+                                        STATE<=STATUS;
+                                    end
+                                end
                                 SET_CONFIGURATION :
                                 GET_INTERFACE :
                                 SET_INTERFACE :
