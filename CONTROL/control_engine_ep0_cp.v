@@ -21,14 +21,21 @@ module control_engine_ep0_cp #(
     input wire [15:0]wLength_i,
 
     output reg descriptor_start_o, //Data path
-    output reg set_address_o,  //Address manager
-    output reg set_configuration_o,  //Config manager
+    
+    output reg cecp_ld_addr_o,  //Address manager
+    output reg [6:0]cecp_new_addr_o,
+
+    output reg cecp_set_config_o,  //Config manager
+    output reg [7:0]cecp_new_config_o,
     output reg start_status_stage_o  //Transaction engine
 
     output reg [7:0]cecp_addr_o,
-    output reg [7:0]cecp_length_o,
-    output reg  [15:0]wLength_o,
-    output reg cecp_rd_curr_config_o
+    output reg [15:0]cecp_length_o,
+
+    output reg [7:0]cecp_interface_o,
+    
+    output reg cecp_rd_curr_config_o,
+    output reg cecp_rd_interface_o
 );
 
     localparam IDLE = 3'd0;
@@ -51,6 +58,9 @@ module control_engine_ep0_cp #(
         end
         else begin
             cecp_rd_curr_config_o<=1'b0;
+            cecp_set_config_o<=1'b0;
+            cecp_rd_interface_o<=1'b0;
+            cecp_ld_addr_o<=1'b0;
             case(STATE)
                 IDLE : begin
                     if(cecp_setup_done_i) begin
@@ -66,11 +76,15 @@ module control_engine_ep0_cp #(
                     case(bmRequestType[6:5])
                         STANDARD : begin
                             case(bRequest)
-                                GET_STATUS :
-                                CLEAR_FEATURE :
-                                SET_FEATURE :
-                                SET_ADDRESS :
-                                GET_DESCRIPTOR : begin
+                                `GET_STATUS :
+                                `CLEAR_FEATURE :
+                                `SET_FEATURE :
+                                `SET_ADDRESS : begin
+                                    cecp_new_addr_o<=wValue[6:0];
+                                    cecp_ld_addr_o<=1'b1;
+                                    //After status stage, give the commit signal to the address manager
+                                end
+                                `GET_DESCRIPTOR : begin
                                     case(wValue[15:8])
                                         `TYPE_DEVICE :begin
                                             if(wValue[7:0]==8'h00)begin
@@ -109,17 +123,36 @@ module control_engine_ep0_cp #(
                                         STATE<=STATUS;
                                     endcase
                                 end
-                                SET_DESCRIPTOR :
-                                GET_CONFIGURATION : begin
+                                `SET_DESCRIPTOR : begin
+                                    //STALL for mass storage
+                                end
+                                `GET_CONFIGURATION : begin
                                     if(wLength==16'h0001)begin
                                         cecp_rd_curr_config_o<=1'b1;
                                         STATE<=STATUS;
                                     end
                                 end
-                                SET_CONFIGURATION :
-                                GET_INTERFACE :
-                                SET_INTERFACE :
-                                SYNCH_FRAME :
+                                `SET_CONFIGURATION : begin
+                                    if(wValue[7:0]<=8'h01)begin
+                                        cecp_set_config_o<=1'b1;
+                                        cecp_new_config_o<=wValue[7:0];
+                                    end
+                                    else //STALL
+                                end
+                                `GET_INTERFACE : begin
+                                    if(wIndex=16'h0000) begin
+                                        cecp_interface_o<=8'h00;
+                                        cecp_rd_interface_o<=1'b1;
+                                    end
+                                    else //STALL
+                                end
+                                `SET_INTERFACE : begin
+                                    if(wIndex=16'h0000) begin
+                                        //ACK
+                                    end
+                                    else //STALL
+                                end
+                                `SYNCH_FRAME :
                             endcase
                         end
                         CLASS : begin
