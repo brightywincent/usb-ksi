@@ -1,4 +1,4 @@
-`include "bRequest.vh"
+`include "bRequest_i.vh"
 `include "DESCRIPTOR_TYPES.vh"
 `include "BASES.vh"
 module control_engine_ep0_cp #(
@@ -26,7 +26,7 @@ module control_engine_ep0_cp #(
     output reg descriptor_start_o, //Data path
     output reg [7:0]cecp_addr_o,
     output reg [15:0]cecp_length_o,
-    output reg cecp_ld_addr_o,  //Address manager
+    output reg cecp_set_addr_o,  //Address manager
     output reg [6:0]cecp_new_addr_o,
     output reg cecp_commit_o, //address, config managers
     output reg cecp_set_config_o,  //Config manager
@@ -43,31 +43,25 @@ module control_engine_ep0_cp #(
     output reg [15:0] got_status,  
     output reg [7:0]cecp_max_lun_o,    
     output reg [7:0]cecp_interface_o, //datapath 
-    
+    output reg cecp_get_status_o,
+
     output reg cecp_bot_reset_o,    
 );
-    localparam IDLE = 3'd0;
-    localparam EXECUTE = 3'd1;
-    localparam SEND_STATUS_IN = 3'd2;
-    localparam STATUS_IN = 3'd3;
-    localparam SEND_DATA_IN = 3'd4;
-    localparam DATA_IN = 3'd5;
-    localparam STALL = 3'd6;
-    localparam ERROR = 3'd7;
-
-    reg [7:0]bmRequestType;
-    reg [7:0]bRequest;
-    reg [15:0]wValue;
-    reg [15:0]wIndex;
-    reg [15:0]wLength;
+    localparam IDLE = 4'd0;
+    localparam EXECUTE = 4'd1;
+    localparam SEND_STATUS_IN = 4'd2;
+    localparam STATUS_IN = 4'd3;
+    localparam SEND_DATA_IN = 4'd4;
+    localparam DATA_IN = 4'd5;
+    localparam STATUS_OUT =4'd6;
+    localparam SEND_STALL =4'd7;
+    localparam STALL = 4'd8;
+    localparam ERROR = 4'd9;
+    
+    reg [3:0]STATE;
 
     always @(posedge cecp_clk_i or posedge cecp_reset)begin
         if(cecp_reset)begin
-            bmRequestType<=8'h00;
-            bRequest<=8'h00;
-            wValue<=16'h00_00;
-            wIndex<=16'h00_00;
-            wLength<=16'h00_00;
             STATE<=3'b0;
             got_status<=16'h0000;
         end
@@ -75,7 +69,7 @@ module control_engine_ep0_cp #(
             cecp_rd_curr_config_o<=1'b0;
             cecp_set_config_o<=1'b0;
             cecp_rd_interface_o<=1'b0;
-            cecp_ld_addr_o<=1'b0;
+            cecp_set_addr_o<=1'b0;
             cecp_ep1_out_halt_o<=1'b0;
             cecp_ep1_in_halt_o<=1'b0;
             cecp_ep1_out_clear_halt_o<=1'b0;
@@ -86,46 +80,25 @@ module control_engine_ep0_cp #(
             cecp_send_zlp_o<=1'b0;
             cecp_commit_o<=1'b0;
             cecp_send_data_in_o<=1'b0;
+            cecp_get_status_o<=1'b0;
             case(STATE)
                 IDLE : begin
-                    if(cecp_setup_done_i) begin
-                        bmRequestType<=bmRequestType_i;
-                        bRequest<=bRequest_i;
-                        wValue<=wValue_i;
-                        wIndex<=wIndex_i;
-                        wLength<=wLength_i;    
+                    if(cecp_setup_done_i) begin    
                         STATE<=EXECUTE;
                     end
                 end
                 EXECUTE : begin
-                    case(bmRequestType[6:5])
+                    case(bmRequestType_i[6:5])
                         STANDARD : begin
-                            case(bRequest)
+                            case(bRequest_i)
                                 `GET_STATUS : begin
-                                        case(bmRequestType[4:0])
-                                            5'b0 : begin //Device
-                                                got_status<=16'h0000;
-                                                STATE<=SEND_DATA_IN;
-                                            end
-                                            5'b1 : begin //Interface
-                                                got_status<=16'h0000;
-                                                STATE<=SEND_DATA_IN;
-                                            end
-                                            5'b2 : begin //Endpoint
-                                                if(cecp_halt_i)begin
-                                                    got_status<=16'h01;
-                                                    STATE<=SEND_DATA_IN;
-                                                end
-                                                else 
-                                                    got_status<=16'h00;
-                                                    STATE<=SEND_DATA_IN;
-                                            end
-                                        endcase
+                                    cecp_get_status_o<=1'b1;
+                                    STATE<=SEND_DATA_IN;
                                 end
                                 `CLEAR_FEATURE : begin
-                                    case(bmRequestType[4:0])
+                                    case(bmRequestType_i[4:0])
                                         5'b0 : begin //Device
-                                            case(wValue)       //Feature Selectors
+                                            case(wValue_i)       //Feature Selectors
                                                 //Device_Remote_Wakeup
                                                 16'h0001 : //STALL
                                                 STATE<=STALL;
@@ -140,7 +113,7 @@ module control_engine_ep0_cp #(
                                             STATE<=STALL;
                                         end
                                         5'b2 : begin //Endpoint
-                                            case(wIndex[7:0])
+                                            case(wIndex_i[7:0])
                                                 8'h01 : begin
                                                     cecp_ep1_out_clear_halt_o<=1'b1;
                                                     STATE<=SEND_STATUS_IN;
@@ -149,21 +122,23 @@ module control_engine_ep0_cp #(
                                                     cecp_ep1_in_clear_halt_o<=1'b1;
                                                     STATE<=SEND_STATUS_IN;
                                                 end
+                                                default : STATE<=STALL;
                                             endcase
                                         end
                                         default : STATE<=STALL;
                                     endcase
                                 end 
                                 `SET_FEATURE : begin
-                                    case(bmRequestType[4:0])
+                                    case(bmRequestType_i[4:0])
                                         5'b0 : begin //Device
-                                            case(wValue)       //Feature Selectors
+                                            case(wValue_i)       //Feature Selectors
                                                 //Device_Remote_Wakeup
                                                 16'h0001 : //STALL
                                                     STATE<=STALL;
                                                 //Test_Mode
                                                 16'h0002 : //STALL
-                                                    STATE<=STALL; 
+                                                    STATE<=STALL;
+                                                default : STATE<=STALL; 
                                             endcase
                                         end
                                         5'b1 : begin //Interface
@@ -172,7 +147,7 @@ module control_engine_ep0_cp #(
                                             STATE<=STALL;
                                         end
                                         5'b2 : begin //Endpoint
-                                            case(wIndex[7:0])
+                                            case(wIndex_i[7:0])
                                                 8'h01 : begin
                                                     cecp_ep1_out_halt_o<=1'b1;
                                                     STATE<=SEND_STATUS_IN;
@@ -181,53 +156,53 @@ module control_engine_ep0_cp #(
                                                     cecp_ep1_in_halt_o<=1'b1;
                                                     STATE<=SEND_STATUS_IN;
                                                 end
+                                                default : STATE<=STALL;
                                             endcase
                                         end
                                         default : STATE<=STALL;
                                     endcase
                                 end
                                 `SET_ADDRESS : begin
-                                    cecp_new_addr_o<=wValue[6:0];
-                                    cecp_ld_addr_o<=1'b1;
+                                    cecp_set_addr_o<=1'b1;
                                     //After status stage, give the commit signal to the address manager
                                     STATE<=SEND_STATUS_IN;
                                 end
                                 `GET_DESCRIPTOR : begin
-                                    case(wValue[15:8])
+                                    case(wValue_i[15:8])
                                         `TYPE_DEVICE :begin
-                                            if(wValue[7:0]==8'h00)begin
+                                            if(wValue_i[7:0]==8'h00)begin
                                                 cecp_addr_o<=`DEVICE_BASE;
-                                                cecp_length_o<=(wLength < `DEVICE_LENGTH)?wLength:`DEVICE_LENGTH;
+                                                cecp_length_o<=(wLength_i < `DEVICE_LENGTH)?wLength_i:`DEVICE_LENGTH;
                                                 STATE<=SEND_DATA_IN;
                                             end
                                         end
                                         `TYPE_CONFIGURATION : begin
-                                            if(wValue[7:0]==8'h00)begin
+                                            if(wValue_i[7:0]==8'h00)begin
                                                 cecp_addr_o<=`CONFIGURATION_BASE;
-                                                cecp_length_o<=(wLength < `CONFIGURATION_LENGTH)?wLength:`CONFIGURATION_LENGTH;
+                                                cecp_length_o<=(wLength_i < `CONFIGURATION_LENGTH)?wLength_i:`CONFIGURATION_LENGTH;
                                                 STATE<=SEND_DATA_IN;
                                             end
                                         end
                                         `TYPE_STRING : begin
-                                            case(wValue[7:0])
+                                            case(wValue_i[7:0])
                                                 8'h00 : begin
                                                     cecp_addr_o<=`STRING0_BASE;
-                                                    cecp_length_o<=(wLength < `STRING0_LENGTH)?wLength:`STRING0_LENGTH;     
+                                                    cecp_length_o<=(wLength_i < `STRING0_LENGTH)?wLength_i:`STRING0_LENGTH;     
                                                     STATE<=SEND_DATA_IN;
                                                 end
                                                 8'h01 : begin
                                                     cecp_addr_o<=`STRING1_BASE;
-                                                    cecp_length_o<=(wLength < `STRING1_LENGTH)?wLength:`STRING1_LENGTH;     
+                                                    cecp_length_o<=(wLength_i < `STRING1_LENGTH)?wLength_i:`STRING1_LENGTH;     
                                                     STATE<=SEND_DATA_IN;
                                                 end
                                                 8'h02 : begin
                                                     cecp_addr_o<=`STRING2_BASE;
-                                                    cecp_length_o<=(wLength < `STRING2_LENGTH)?wLength:`STRING2_LENGTH;     
+                                                    cecp_length_o<=(wLength_i < `STRING2_LENGTH)?wLength_i:`STRING2_LENGTH;     
                                                     STATE<=SEND_DATA_IN;
                                                 end
                                                 8'h03 : begin
                                                     cecp_addr_o<=`STRING3_BASE;
-                                                    cecp_length_o<=(wLength < `STRING3_LENGTH)?wLength:`STRING3_LENGTH;     
+                                                    cecp_length_o<=(wLength_i < `STRING3_LENGTH)?wLength_i:`STRING3_LENGTH;     
                                                     STATE<=SEND_DATA_IN;
                                                 end
                                             endcase
@@ -239,22 +214,22 @@ module control_engine_ep0_cp #(
                                     STATE<=STALL;
                                 end
                                 `GET_CONFIGURATION : begin
-                                    if(wLength==16'h0001)begin
+                                    if(wLength_i==16'h0001)begin
                                         cecp_rd_curr_config_o<=1'b1;
                                         STATE<=SEND_DATA_IN;
                                     end
                                 end
                                 `SET_CONFIGURATION : begin
-                                    if(wValue[7:0]<=8'h01)begin
+                                    if(wValue_i[7:0]<=8'h01)begin
                                         cecp_set_config_o<=1'b1;
-                                        cecp_new_config_o<=wValue[7:0];
+                                        cecp_new_config_o<=wValue_i[7:0];
                                         STATE<=SEND_STATUS_IN;
                                     end
                                     else //STALL
                                         STATE<=STALL;
                                 end
                                 `GET_INTERFACE : begin
-                                    if(wIndex==16'h0000) begin
+                                    if(wIndex_i==16'h0000) begin
                                         cecp_interface_o<=8'h00;
                                         cecp_rd_interface_o<=1'b1;
                                         STATE<=SEND_DATA_IN;
@@ -263,7 +238,7 @@ module control_engine_ep0_cp #(
                                         STATE<=STALL;
                                 end
                                 `SET_INTERFACE : begin
-                                    if(wIndex==16'h0000) begin
+                                    if(wIndex_i==16'h0000) begin
                                         STATE<=SEND_STATUS_IN;
                                     end
                                     else //STALL
@@ -277,9 +252,9 @@ module control_engine_ep0_cp #(
                             endcase
                         end
                         CLASS : begin  //this is for interface recipient
-                            case(bRequest)
+                            case(bRequest_i)
                                 `BULK_ONLY_RESET : begin
-                                    if(wValue==16'h0000 && wLength==16'h0000)begin
+                                    if(wValue_i==16'h0000 && wLength_i==16'h0000)begin
                                         cecp_bot_reset_o<=1'b1;
                                         STATE<=SEND_STATUS_IN;
                                     end
@@ -287,7 +262,7 @@ module control_engine_ep0_cp #(
                                         STATE<=STALL;
                                 end
                                 `GET_MAX_LUN : begin  //Max LUN = Number of LUNs − 1
-                                    if(wIndex==16'h0000 && wLength==16'h0001) begin
+                                    if(wIndex_i==16'h0000 && wLength_i==16'h0001) begin
                                         cecp_max_lun_o<=8'h00;
                                         STATE<=SEND_DATA_IN;
                                     end
