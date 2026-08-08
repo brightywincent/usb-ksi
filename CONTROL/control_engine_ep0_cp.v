@@ -1,7 +1,6 @@
 `include "bRequest.vh"
 `include "DESCRIPTOR_TYPES.vh"
 `include "BASES.vh"
-//Max LUN = Number of LUNs − 1
 module control_engine_ep0_cp #(
     parameter STANDARD 2'b00,
     parameter CLASS 2'b01,
@@ -10,59 +9,43 @@ module control_engine_ep0_cp #(
 )(
     input wire cecp_clk_i,
     input wire cecp_reset,
-
-    input wire cecp_setup_done_i,  //Transaction engine
+    input wire cecp_timeout_i,  //Transaction engine
+    input wire cecp_setup_done_i,  
     input wire cecp_status_in_done_i,
-    input wire cecp_timeout_i,
-    
+    input wire cecp_transaction_error_i,
+    input wire cecp_data_in_done_i,
+    input wire cecp_status_out_done_i,
+    input wire cecp_stall_done_i,
     input wire [7:0]bmRequestType_i, //from datapath
     input wire [7:0]bRequest_i,
     input wire [15:0]wValue_i,
     input wire [15:0]wIndex_i,
     input wire [15:0]wLength_i,
-
-    input wire cecp_transaction_error_i,
-
-    input wire cecp_data_in_done_i,
-    input wire cecp_status_out_done_i,
-    input wire cecp_stall_done_i,
-
     input wire cecp_halt_i, //EP halt flags ORed input 
-
-    output reg descriptor_start_o, //Data path
     
-    output reg cecp_ld_addr_o,  //Address manager
-    output reg [6:0]cecp_new_addr_o,
-
-    output reg cecp_set_config_o,  //Config manager
-    output reg [7:0]cecp_new_config_o,
-    output reg start_status_stage_o,  //Transaction engine
-
+    output reg descriptor_start_o, //Data path
     output reg [7:0]cecp_addr_o,
     output reg [15:0]cecp_length_o,
-
-    output reg [7:0]cecp_interface_o,
-    
-    output reg cecp_rd_curr_config_o,
+    output reg cecp_ld_addr_o,  //Address manager
+    output reg [6:0]cecp_new_addr_o,
+    output reg cecp_commit_o, //address, config managers
+    output reg cecp_set_config_o,  //Config manager
+    output reg [7:0]cecp_new_config_o,
+    output reg cecp_rd_curr_config_o,  
     output reg cecp_rd_interface_o,
-
-    output reg cecp_ep1_out_halt_o,
-    output reg cecp_ep1_in_halt_o,
-
-    output reg cecp_ep1_out_clear_halt_o,
-    output reg cecp_ep1_in_clear_halt_o,
-
-    output reg [15:0] got_status,
-
-    output reg cecp_bot_reset_o,
-    output reg [7:0]cecp_max_lun_o,
-
+    output reg start_status_stage_o,  //Transaction engine
     output reg cecp_send_zlp_o,
-
-    output reg cecp_commit_o,
-    output reg cecp_send_data_in_o
+    output reg cecp_send_data_in_o 
+    output reg cecp_ep1_out_halt_o,  //endpoint
+    output reg cecp_ep1_in_halt_o,  
+    output reg cecp_ep1_out_clear_halt_o, 
+    output reg cecp_ep1_in_clear_halt_o,  
+    output reg [15:0] got_status,  
+    output reg [7:0]cecp_max_lun_o,    
+    output reg [7:0]cecp_interface_o, //datapath 
+    
+    output reg cecp_bot_reset_o,    
 );
-
     localparam IDLE = 3'd0;
     localparam EXECUTE = 3'd1;
     localparam SEND_STATUS_IN = 3'd2;
@@ -300,12 +283,16 @@ module control_engine_ep0_cp #(
                                         cecp_bot_reset_o<=1'b1;
                                         STATE<=SEND_STATUS_IN;
                                     end
+                                    else
+                                        STATE<=STALL;
                                 end
-                                `GET_MAX_LUN : begin
+                                `GET_MAX_LUN : begin  //Max LUN = Number of LUNs − 1
                                     if(wIndex==16'h0000 && wLength==16'h0001) begin
                                         cecp_max_lun_o<=8'h00;
                                         STATE<=SEND_DATA_IN;
                                     end
+                                    else
+                                        STATE<=STALL;
                                 end
                             endcase
                         end
