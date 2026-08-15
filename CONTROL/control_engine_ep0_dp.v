@@ -1,3 +1,4 @@
+//Must use wire for the packet byte outputs instead of reg
 module control_engine_ep0_dp(
     input wire cedp_clk_i,
     input wire cedp_reset,
@@ -20,7 +21,7 @@ module control_engine_ep0_dp(
     output reg [15:0]wIndex_o,
     output reg [15:0]wLength_o,
 
-    output reg cedp_got_status_o  //ep0 tx buffer
+    output reg [15:0]cedp_got_status_o  //ep0 tx buffer
 
     output reg cedp_ld_addr_o,  //Address manager
     output reg [7:0]cedp_addr_o,
@@ -38,7 +39,17 @@ module control_engine_ep0_dp(
     reg [15:0]wLength;
     always@(posedge cedp_clk_i or posedge cedp_reset)begin
         if(cedp_reset)begin
-
+            bmRequestType<=8'h00;
+            bRequest<=8'h00;
+            wValue<=16'h0000;
+            wIndex<=16'h0000;
+            wLength<=16'h0000;
+            cedp_got_status_o<=16'h0000;  //ep0 tx buffer
+            cedp_ld_addr_o<=1'b0;  //Address manager
+            cedp_addr_o<=8'h00;
+            cedp_addr_base_o<=8'h00; //descriptor rom
+            cedp_length_o<=16'h0000;
+            cedp_max_lun_o<=8'h00;
         end
         else begin
             bmRequestType_o<=bmRequestType;
@@ -46,7 +57,6 @@ module control_engine_ep0_dp(
             wValue_o<=wValue;
             wIndex_o<=wIndex;
             wLength_o<=wLength;
-            
             cedp_ld_addr_o<=1'b0;
             if(cedp_setup_done_i) begin
                 bmRequestType<=bmRequestType_i;
@@ -113,7 +123,7 @@ module control_engine_ep0_dp(
                 endcase                
             end
             else if(cedp_get_interface_i) begin
-                //cedp_curr_alt_o<=wValue[7:0];  //write such that it fetches curr alt setting in the descriptor rom
+                //cedp_curr_alt_o<=wValue[7:0];  //write such that it fetches curr alt setting from the descriptor rom
                 cedp_rd_interface_o<=1'b1;
             end
             else if(cedp_set_interface_i) begin  //Should be revised
@@ -124,5 +134,4 @@ module control_engine_ep0_dp(
             end
         end
     end
-
 endmodule
