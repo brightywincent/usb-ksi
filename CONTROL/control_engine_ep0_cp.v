@@ -26,13 +26,13 @@ module control_engine_ep0_cp #(
     output reg descriptor_start_o, //Data path
     output reg [7:0]cecp_addr_o,
     output reg [15:0]cecp_length_o,
+    output reg cecp_get_interface_o,
     output reg cecp_set_addr_o,  //Address manager
     output reg [6:0]cecp_new_addr_o,
     output reg cecp_commit_o, //address, config managers
     output reg cecp_set_config_o,  //Config manager
     output reg [7:0]cecp_new_config_o,
     output reg cecp_rd_curr_config_o,  
-    output reg cecp_rd_interface_o,
     output reg start_status_stage_o,  //Transaction engine
     output reg cecp_send_zlp_o,
     output reg cecp_send_data_in_o 
@@ -40,10 +40,9 @@ module control_engine_ep0_cp #(
     output reg cecp_ep1_in_halt_o,  
     output reg cecp_ep1_out_clear_halt_o, 
     output reg cecp_ep1_in_clear_halt_o,  
-    output reg [15:0] got_status,  
-    output reg [7:0]cecp_max_lun_o,    
-    output reg [7:0]cecp_interface_o, //datapath 
-    output reg cecp_get_status_o,
+    output reg cecp_send_mlun_o,    //datapath 
+    output reg cecp_get_status_o, 
+    output reg cecp_get_descriptor_o,
 
     output reg cecp_bot_reset_o,    
 );
@@ -68,7 +67,6 @@ module control_engine_ep0_cp #(
         else begin
             cecp_rd_curr_config_o<=1'b0;
             cecp_set_config_o<=1'b0;
-            cecp_rd_interface_o<=1'b0;
             cecp_set_addr_o<=1'b0;
             cecp_ep1_out_halt_o<=1'b0;
             cecp_ep1_in_halt_o<=1'b0;
@@ -76,11 +74,14 @@ module control_engine_ep0_cp #(
             cecp_ep1_in_clear_halt_o<=1'b0;
             got_status<=16'h0000;
             cecp_bot_reset_o<=1'b0;
-            cecp_max_lun_o<=8'h00;
+            cecp_send_mlun_o<=8'h00;
             cecp_send_zlp_o<=1'b0;
             cecp_commit_o<=1'b0;
             cecp_send_data_in_o<=1'b0;
             cecp_get_status_o<=1'b0;
+            cecp_get_descriptor_o<=1'b0;
+            cecp_get_interface<=1'b0;
+            cecp_send_mlun_o<=1'b0;
             case(STATE)
                 IDLE : begin
                     if(cecp_setup_done_i) begin    
@@ -168,46 +169,8 @@ module control_engine_ep0_cp #(
                                     STATE<=SEND_STATUS_IN;
                                 end
                                 `GET_DESCRIPTOR : begin
-                                    case(wValue_i[15:8])
-                                        `TYPE_DEVICE :begin
-                                            if(wValue_i[7:0]==8'h00)begin
-                                                cecp_addr_o<=`DEVICE_BASE;
-                                                cecp_length_o<=(wLength_i < `DEVICE_LENGTH)?wLength_i:`DEVICE_LENGTH;
-                                                STATE<=SEND_DATA_IN;
-                                            end
-                                        end
-                                        `TYPE_CONFIGURATION : begin
-                                            if(wValue_i[7:0]==8'h00)begin
-                                                cecp_addr_o<=`CONFIGURATION_BASE;
-                                                cecp_length_o<=(wLength_i < `CONFIGURATION_LENGTH)?wLength_i:`CONFIGURATION_LENGTH;
-                                                STATE<=SEND_DATA_IN;
-                                            end
-                                        end
-                                        `TYPE_STRING : begin
-                                            case(wValue_i[7:0])
-                                                8'h00 : begin
-                                                    cecp_addr_o<=`STRING0_BASE;
-                                                    cecp_length_o<=(wLength_i < `STRING0_LENGTH)?wLength_i:`STRING0_LENGTH;     
-                                                    STATE<=SEND_DATA_IN;
-                                                end
-                                                8'h01 : begin
-                                                    cecp_addr_o<=`STRING1_BASE;
-                                                    cecp_length_o<=(wLength_i < `STRING1_LENGTH)?wLength_i:`STRING1_LENGTH;     
-                                                    STATE<=SEND_DATA_IN;
-                                                end
-                                                8'h02 : begin
-                                                    cecp_addr_o<=`STRING2_BASE;
-                                                    cecp_length_o<=(wLength_i < `STRING2_LENGTH)?wLength_i:`STRING2_LENGTH;     
-                                                    STATE<=SEND_DATA_IN;
-                                                end
-                                                8'h03 : begin
-                                                    cecp_addr_o<=`STRING3_BASE;
-                                                    cecp_length_o<=(wLength_i < `STRING3_LENGTH)?wLength_i:`STRING3_LENGTH;     
-                                                    STATE<=SEND_DATA_IN;
-                                                end
-                                            endcase
-                                        end
-                                    endcase
+                                    cecp_get_descriptor_o<=1'b1;
+                                    STATE<=SEND_DATA_IN;
                                 end
                                 `SET_DESCRIPTOR : begin
                                     //STALL for mass storage
@@ -222,24 +185,23 @@ module control_engine_ep0_cp #(
                                 `SET_CONFIGURATION : begin
                                     if(wValue_i[7:0]<=8'h01)begin
                                         cecp_set_config_o<=1'b1;
-                                        cecp_new_config_o<=wValue_i[7:0];
+                                        //cecp_new_config_o<=wValue_i[7:0];  config manager input must be driven by wValue_i[7:0] from datapath
                                         STATE<=SEND_STATUS_IN;
                                     end
                                     else //STALL
                                         STATE<=STALL;
                                 end
                                 `GET_INTERFACE : begin
-                                    if(wIndex_i==16'h0000) begin
-                                        cecp_interface_o<=8'h00;
-                                        cecp_rd_interface_o<=1'b1;
+                                    if(wIndex_i==16'h0000 && wValue_i==16'h0000) begin  //should be updated. synced with the descriptor rom
+                                        cecp_get_interface<=1'b1;
                                         STATE<=SEND_DATA_IN;
                                     end
                                     else //STALL
                                         STATE<=STALL;
                                 end
                                 `SET_INTERFACE : begin
-                                    if(wIndex_i==16'h0000) begin
-                                        STATE<=SEND_STATUS_IN;
+                                    if(wIndex_i==16'h0000 && wValue_i==16'h0000) begin  //should also be revised
+                                        STATE<=SEND_STATUS_IN; //Interface already set to 8'h00
                                     end
                                     else //STALL
                                         STATE<=STALL;
@@ -263,7 +225,7 @@ module control_engine_ep0_cp #(
                                 end
                                 `GET_MAX_LUN : begin  //Max LUN = Number of LUNs − 1
                                     if(wIndex_i==16'h0000 && wLength_i==16'h0001) begin
-                                        cecp_max_lun_o<=8'h00;
+                                        cecp_send_mlun_o<=1'b1;
                                         STATE<=SEND_DATA_IN;
                                     end
                                     else
