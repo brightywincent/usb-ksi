@@ -4,11 +4,8 @@ module transaction_engine#(
 )(
     input wire te_clk_i,
     input wire te_reset,
-    //input wire te_sync_i,
-    //input wire te_eop_i,
 
     input wire [3:0]te_pid_nibble_i,
-    //input wire te_pid_valid_i,
 
     input wire te_token_trigger_i, //token handler net
     input wire te_token_valid_i,
@@ -44,7 +41,7 @@ module transaction_engine#(
     output reg te_clear_endp_buff_o,
     output reg te_setup_done_o,
 
-    output reg te_protocol_err_o
+    output reg te_protocol_err_o     //should add packet valid signal
 );
     //For both STATE and SUB_STATE
     localparam IDLE=3'd0; 
